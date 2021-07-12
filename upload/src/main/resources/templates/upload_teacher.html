@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <title>upload</title>
+</head>
+<body>
+    <form id="uploadForm" action="/teacher/upload" method="post" enctype="multipart/form-data">
+        <fieldset>
+            <legend>선생님 업로드</legend>
+            <label>이름 : <input type="text" name="name" id="name" equired="required"/></label><br>
+            <label>학년 : <input type="number" name="grade" id="grade" equired="required"/></label><br>
+            <label>나이 : <input type="number" name="age" id="age" equired="required"/></label><br>
+            <label>프로필 : <input type="file" name="profile" id="profile" /></label><br>
+            <input type="submit">
+        </fieldset>
+    </form>
+
+</body>
+</html>

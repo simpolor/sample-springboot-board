@@ -1,0 +1,8 @@
+spring:
+  mvc:
+    converters:
+      preferred-json-mapper: gson
+
+application:
+  files:
+    path: D:/upload/
