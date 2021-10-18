@@ -15,14 +15,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final int MAX_SIZE = 100 * 1024 * 1024;
 
-    /*@Bean
-    public MultipartResolver resolver() {
-
-        StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
-
-        return resolver;
-    }*/
-
     @Bean
     public MultipartResolver resolver() {
 

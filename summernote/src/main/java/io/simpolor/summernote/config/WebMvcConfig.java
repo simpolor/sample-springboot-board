@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${application.upload.path}")
+    @Value("${application.files.path}")
     private String uploadPath; // uploadPath는 마지막 "/"을 넣어야함, 주의필요
 
     /**

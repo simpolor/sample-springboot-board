@@ -1,7 +1,6 @@
 package io.simpolor.upload.component;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FilenameUtils;
@@ -11,165 +10,188 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Component
 public class FileUploader {
+
+    private static final List<String> EXTENSIONS_IMAGE = Arrays.asList("bmp", "gif", "jpg", "png", "jpeg");
+    private static final List<String> EXTENSIONS_VIDEO = Arrays.asList("mp4", "avi", "mov", "mpg", "wmv", "mpeg");
 
     private final static String THUMBNAIL_PATH = "thumb";
     private final static int THUMBNAIL_WIDTH = 150;
     private final static int THUMBNAIL_HEIGHT = 150;
 
     @Value("${application.files.path}")
-    String filePath;
+    private String rootFilePath;
 
-    public Files createFile(MultipartFile multipartFile, String folder){
+    public FileInfo createFile(MultipartFile multipartFile, String directory){
 
-        if(!multipartFile.isEmpty() && multipartFile.getSize() != 0){
+        if(Objects.nonNull(multipartFile) && !multipartFile.isEmpty() && multipartFile.getSize() > 0){
 
-            String orgFileName = multipartFile.getOriginalFilename();
             long fileSize = multipartFile.getSize();
-
-            String fileExt = FilenameUtils.getExtension(orgFileName);
-            String savedFileName = UUID.randomUUID()+"."+fileExt;
-            String savedFilePath = StringUtils.isEmpty(folder) ? filePath : filePath + File.separator + folder;
-
-            File file = new File(savedFilePath);
-            if(file.exists() == false){
-                file.mkdirs();
-            }
+            String fileExt = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+            String saveFileName =
+                    new StringBuilder(UUID.randomUUID().toString())
+                            .append(".")
+                            .append(fileExt)
+                            .toString();
+            String saveFilePath = makeDirectory(directory);
 
             try {
-                File image = new File(savedFilePath + File.separator + savedFileName);
-                multipartFile.transferTo(image);
+                File saveFile = createFile(saveFilePath, saveFileName);
+                multipartFile.transferTo(saveFile);
 
-                File thumnail = new File(savedFilePath + File.separator + THUMBNAIL_PATH + File.separator + savedFileName);
-                thumnail.getParentFile().mkdirs();
-                Thumbnails.of(image)
-                        .size(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT)
-                        .toFile(thumnail);
+                if(EXTENSIONS_IMAGE.contains(fileExt)){
+                    createThumbnail(saveFile, saveFilePath, saveFileName);
+                }
 
-                return Files.builder()
-                        .orgFileName(orgFileName)
-                        .savedFileName(savedFileName)
+                return FileInfo.builder()
+                        .orgFileName(multipartFile.getOriginalFilename())
+                        .savedFileName(saveFileName)
                         .fileSize(fileSize)
                         .fileExt(fileExt)
                         .build();
 
             }catch (IOException ioe){
-                ioe.printStackTrace();
+                log.error("createFile error: {}", ioe.getMessage());
             }
         }
-
         return null;
     }
 
-    public Files createFileV2(MultipartFile multipartFile, String folder){
+    public List<FileInfo> createFiles(MultipartFile[] multipartFiles, String directory) {
 
-        if(!multipartFile.isEmpty() && multipartFile.getSize() != 0){
+        List<FileInfo> fileInfos = new ArrayList<>();
+        if(Objects.nonNull(multipartFiles)){
+            for(MultipartFile multipartFile : multipartFiles){
+                FileInfo fileInfo = createFile(multipartFile, directory);
+                fileInfos.add(fileInfo);
+            }
+        }
+
+        return fileInfos;
+    }
+
+
+    /***
+     * MultipartFile
+     * - getName() : 파라미터 이름
+     * - getOriginalFilename() : 파일 이름
+     * - isEmpty() : 파일 존재 유무
+     * - getBytes : 파일 데이터
+     * - getInputStream() : 파일 데이터를 읽어오는 InputStream을 얻어옴
+     * - transferTo(File file) : 파일 데이터를 지정한 파일로 저장
+     */
+    public FileInfo createFile2(MultipartFile multipartFile, String directory){
+
+        if(Objects.nonNull(multipartFile) && !multipartFile.isEmpty() && multipartFile.getSize() != 0){
 
             String orgFileName = multipartFile.getOriginalFilename();
             long fileSize = multipartFile.getSize();
-
             String fileExt = FilenameUtils.getExtension(orgFileName);
-            String savedFileName = UUID.randomUUID()+"."+fileExt;
-            String savedFilePath = StringUtils.isEmpty(folder) ? filePath : filePath + File.separator + folder;
+            String saveFileName =
+                    new StringBuilder(UUID.randomUUID().toString())
+                            .append(".")
+                            .append(fileExt)
+                            .toString();
 
-            File file = new File(savedFilePath);
-            if(file.exists() == false){
-                file.mkdirs();
-            }
+            String saveFilePath = makeDirectory(directory);
 
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
             try {
-                File image = new File(savedFilePath + File.separator + savedFileName);
-
-                inputStream = multipartFile.getInputStream();
-                outputStream = new FileOutputStream(image);
+                File saveFile = createFile(saveFilePath, saveFileName);
+                InputStream inputStream = multipartFile.getInputStream();
+                OutputStream outputStream = new FileOutputStream(saveFile);
 
                 int readByte = 0;
-                byte[] buffer = new byte[8192];
+                byte[] buffer = new byte[1024];
 
-                while ((readByte = inputStream.read(buffer, 0, 8120)) != -1){
+                while ((readByte = inputStream.read(buffer, 0, 1024)) != -1){
                     outputStream.write(buffer, 0, readByte); // 파일 생성
                 }
 
-                return Files.builder()
+                return FileInfo.builder()
                         .orgFileName(orgFileName)
-                        .savedFileName(savedFileName)
+                        .savedFileName(saveFileName)
                         .fileSize(fileSize)
                         .fileExt(fileExt)
                         .build();
 
             }catch (IOException ioe) {
-                ioe.printStackTrace();
+                log.error("createFile2 error: {}", ioe.getMessage());
             }
         }
 
         return null;
     }
 
-    public List<Files> createFiles(MultipartFile[] multipartFiles, String folder){
+    private String makeDirectory(String directory){
 
-        List<Files> files = new ArrayList<>();
-
-        for(MultipartFile multipartFile : multipartFiles){
-            if(!multipartFile.isEmpty() && multipartFile.getSize() != 0){
-
-                String orgFileName = multipartFile.getOriginalFilename();
-                long fileSize = multipartFile.getSize();
-
-                String fileExt = FilenameUtils.getExtension(orgFileName);
-                String savedFileName = UUID.randomUUID()+"."+fileExt;
-                String savedFilePath = StringUtils.isEmpty(folder) ? filePath : filePath + File.separator + folder;
-
-                File file = new File(savedFilePath);
-                if(file.exists() == false){
-                    file.mkdirs();
-                }
-
-                try {
-                    File image = new File(savedFilePath + File.separator + savedFileName);
-                    multipartFile.transferTo(image);
-
-                    File thumnail = new File(savedFilePath + File.separator + THUMBNAIL_PATH + File.separator + savedFileName);
-                    thumnail.getParentFile().mkdirs();
-                    Thumbnails.of(image)
-                            .size(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT)
-                            .toFile(thumnail);
-
-                    files.add(Files.builder()
-                            .orgFileName(orgFileName)
-                            .savedFileName(savedFileName)
-                            .fileSize(fileSize)
-                            .fileExt(fileExt)
-                            .build());
-
-                }catch (IOException ioe){
-                    ioe.printStackTrace();
-                }
-            }
+        StringBuilder sb = new StringBuilder();
+        sb.append(rootFilePath);
+        if(StringUtils.isNotEmpty(directory)){
+            sb.append(File.separator);
+            sb.append(directory);
         }
 
-        return files;
+        File makeFilePath = new File(sb.toString());
+        if(Boolean.FALSE.equals(makeFilePath.exists())){
+            makeFilePath.mkdirs();
+        }
+
+        return sb.toString();
     }
 
-    @Data
+    private File createFile(String filePath, String fileName){
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(filePath);
+        sb.append(File.separator);
+        sb.append(fileName);
+
+        return new File(sb.toString());
+    }
+
+    private void createThumbnail(File file, String filePath, String fileName) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(filePath);
+        sb.append(File.separator);
+        sb.append(THUMBNAIL_PATH);
+
+        File makeFilePath = new File(sb.toString());
+        if(Boolean.FALSE.equals(makeFilePath.exists())){
+            makeFilePath.mkdirs();
+        }
+
+        try {
+            StringBuilder sb2 = new StringBuilder();
+            sb2.append(makeFilePath);
+            sb2.append(File.separator);
+            sb2.append(fileName);
+
+            Thumbnails.of(file)
+                    .size(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT)
+                    .toFile(sb2.toString());
+
+        }catch (IOException ioe){
+            log.error("createThumbnail error: {}", ioe.getMessage());
+        }
+
+    }
+
+    @Getter
+    @Setter
     @Builder
-    public static class Files {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FileInfo {
 
         private String orgFileName;
-
         private String savedFileName;
-
         private long fileSize;
-
         private String fileExt;
-
     }
 
 }
