@@ -1,6 +1,6 @@
-package io.simpolor.summernote.service;
+package io.simpolor.toasteditor.service;
 
-import io.simpolor.summernote.model.BoardDto;
+import io.simpolor.toasteditor.model.BoardDto;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;

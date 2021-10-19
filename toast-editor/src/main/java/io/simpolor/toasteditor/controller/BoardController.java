@@ -1,9 +1,9 @@
-package io.simpolor.summernote.controller;
+package io.simpolor.toasteditor.controller;
 
 import com.google.gson.JsonObject;
-import io.simpolor.summernote.component.EditorFileUploader;
-import io.simpolor.summernote.model.BoardDto;
-import io.simpolor.summernote.service.BoardService;
+import io.simpolor.toasteditor.component.EditorFileUploader;
+import io.simpolor.toasteditor.model.BoardDto;
+import io.simpolor.toasteditor.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

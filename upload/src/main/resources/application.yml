@@ -5,4 +5,4 @@ spring:
 
 application:
   files:
-    path: D:/upload/
+    path: D:/upload/ # 마지막 "/"을 넣어야함, 주의필요

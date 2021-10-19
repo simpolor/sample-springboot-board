@@ -72,5 +72,21 @@ public class UploadController {
 		FileUploader.FileInfo fileInfo = fileUploader.createFile2(profile, "test2");
 		return UploadResponse.of(fileInfo);
 	}
+
+	@GetMapping("/upload3")
+	public ModelAndView uploadForm3(ModelAndView mav){
+
+		mav.setViewName("upload3");
+		return mav;
+	}
+
+	@PostMapping("/upload3")
+	public UploadResponse upload3(MultipartHttpServletRequest request) {
+
+		MultipartFile profile = request.getFile("uploadFile");
+
+		FileUploader.FileInfo fileInfo = fileUploader.createFile2(profile, "test3");
+		return UploadResponse.of(fileInfo);
+	}
 }
 

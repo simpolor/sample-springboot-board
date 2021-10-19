@@ -3,6 +3,7 @@ package io.simpolor.upload.component;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ public class FileUploader {
 
     private static final List<String> EXTENSIONS_IMAGE = Arrays.asList("bmp", "gif", "jpg", "png", "jpeg");
     private static final List<String> EXTENSIONS_VIDEO = Arrays.asList("mp4", "avi", "mov", "mpg", "wmv", "mpeg");
+    private final static String DOT = ".";
 
     private final static String THUMBNAIL_PATH = "thumb";
     private final static int THUMBNAIL_WIDTH = 150;
@@ -32,17 +34,16 @@ public class FileUploader {
 
             long fileSize = multipartFile.getSize();
             String fileExt = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+            String saveFilePath = makeDirectory(directory);
             String saveFileName =
                     new StringBuilder(UUID.randomUUID().toString())
                             .append(".")
                             .append(fileExt)
                             .toString();
-            String saveFilePath = makeDirectory(directory);
+            File saveFile = createFile(saveFilePath, saveFileName);
 
             try {
-                File saveFile = createFile(saveFilePath, saveFileName);
                 multipartFile.transferTo(saveFile);
-
                 if(EXTENSIONS_IMAGE.contains(fileExt)){
                     createThumbnail(saveFile, saveFilePath, saveFileName);
                 }
@@ -91,16 +92,11 @@ public class FileUploader {
             String orgFileName = multipartFile.getOriginalFilename();
             long fileSize = multipartFile.getSize();
             String fileExt = FilenameUtils.getExtension(orgFileName);
-            String saveFileName =
-                    new StringBuilder(UUID.randomUUID().toString())
-                            .append(".")
-                            .append(fileExt)
-                            .toString();
-
             String saveFilePath = makeDirectory(directory);
+            String saveFileName = UUID.randomUUID() + DOT + fileExt;
+            File saveFile = createFile(saveFilePath, saveFileName);
 
             try {
-                File saveFile = createFile(saveFilePath, saveFileName);
                 InputStream inputStream = multipartFile.getInputStream();
                 OutputStream outputStream = new FileOutputStream(saveFile);
 
@@ -120,6 +116,36 @@ public class FileUploader {
 
             }catch (IOException ioe) {
                 log.error("createFile2 error: {}", ioe.getMessage());
+            }
+        }
+
+        return null;
+    }
+
+    public FileInfo createFile3(MultipartFile multipartFile, String directory){
+
+        if(Objects.nonNull(multipartFile) && !multipartFile.isEmpty() && multipartFile.getSize() != 0){
+
+            String orgFileName = multipartFile.getOriginalFilename();
+            long fileSize = multipartFile.getSize();
+            String fileExt = FilenameUtils.getExtension(orgFileName);
+            String saveFilePath = makeDirectory(directory);
+            String saveFileName = UUID.randomUUID() + DOT + fileExt;
+            File saveFile = createFile(saveFilePath, saveFileName);
+
+            try {
+                InputStream fileStream = multipartFile.getInputStream();
+                FileUtils.copyInputStreamToFile(fileStream, saveFile); //파일 저장
+
+                return FileInfo.builder()
+                        .orgFileName(orgFileName)
+                        .savedFileName(saveFileName)
+                        .fileSize(fileSize)
+                        .fileExt(fileExt)
+                        .build();
+
+            }catch (IOException ioe) {
+                log.error("createFile3 error: {}", ioe.getMessage());
             }
         }
 
