@@ -29,7 +29,7 @@ public class FileUpload {
         // 랜덤 UUID+확장자로 저장될 savedFileName
         String savedFileName = UUID.randomUUID() + extension;
 
-        File targetFile = new File(filePath + savedFileName);
+        File targetFile = new File(filePath + File.separator + savedFileName);
 
         try {
             InputStream fileStream = multipartFile.getInputStream();
