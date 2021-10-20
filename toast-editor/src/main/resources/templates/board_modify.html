@@ -27,16 +27,13 @@
         function fnModify() {
             document.getElementById("boardForm").submit();
         }
-        function fnList(){
-            location.href = "[[@{/board/list}]]";
-        }
     </script>
 </head>
 <body>
     <h1>Sample Springboot Summernote</h1>
 
     <div class="board-form">
-        <form th:id="boardForm" th:action="@{/board/modify/{seq}(seq=${board.seq})}" th:method="post" th:object="${board}">
+        <form th:id="boardForm" th:action="@{/board/modify/{id}(id=${board.boardId})}" th:method="post" th:object="${board}">
             <div class="board-title">
                 <input th:name="title" th:type="text" th:field="${board.title}" />
             </div>
@@ -45,8 +42,9 @@
             </div>
         </form>
         <div class="board-buttons">
+            <a th:href="@{/board/list}"><button>목록</button></a>
+            <a th:href="@{/board/detail/{id}(id=${board.boardId})}"><button>취소</button></a>
             <button onclick="fnModify()">수정</button>
-            <button onclick="fnList()">목록</button>
         </div>
     </div>
 </body>

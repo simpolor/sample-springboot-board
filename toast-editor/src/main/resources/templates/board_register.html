@@ -49,10 +49,6 @@
         function fnWrite() {
             document.getElementById("boardForm").submit();
         }
-
-        function fnList(){
-            location.href = "[[@{/board/list}]]";
-        }
     </script>
 </head>
 <body>
@@ -61,15 +57,15 @@
     <div class="board-form">
         <form th:id="boardForm" th:action="@{/board/register}" th:method="post">
             <div class="board-title">
-                <input th:name="title" th:type="text" placeholder="제목" />
+                <input type="text" th:name="title" placeholder="제목" />
             </div>
             <div class="board-content">
                 <textarea id="summernote" th:name="content"></textarea>
             </div>
         </form>
         <div class="board-buttons">
+            <a th:href="@{/board/list}"><button>목록</button></a>
             <button onclick="fnWrite()">등록</button>
-            <button onclick="fnList()">목록</button>
         </div>
     </div>
 </body>

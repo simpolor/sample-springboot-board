@@ -11,16 +11,8 @@
     </style>
 
     <script>
-        function fnModifyForm(seq){
-            var url = '[[@{/board}]]';
-            var path = '/modify/'+seq;
-            location.href = url+path;
-        }
         function fnDelete(){
             document.getElementById("boardForm").submit();
-        }
-        function fnList(){
-            location.href = "[[@{/board/list}]]";
         }
     </script>
 
@@ -36,12 +28,12 @@
             <p th:if="${board!= null}" th:utext="${board.content}"></p>
         </div>
 
-        <form th:id="boardForm" th:action="@{/board/delete/{seq}(seq=${board.seq})}" th:method="post" th:object="${board}"></form>
+        <form th:id="boardForm" th:action="@{/board/delete/{id}(id=${board.boardId})}" th:method="post" th:object="${board}"></form>
 
-        <div  class="board-buttons">
-            <button onclick="fnModifyForm('1')">수정</button>
+        <div class="board-buttons">
+            <a th:href="@{/board/list}"><button>목록</button></a>
             <button onclick="fnDelete()">삭제</button>
-            <button onclick="fnList()">목록</button>
+            <a th:href="@{/board/modify/{id}(id=${board.boardId})}"><button>수정</button></a>
         </div>
     </div>
 </body>

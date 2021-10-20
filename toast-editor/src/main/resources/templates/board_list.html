@@ -12,16 +12,11 @@
         .board-buttons { margin-top: 10px; text-align: right; }
         .text-center { text-align: center; }
     </style>
-    <script>
-        function fnWriteForm(){
-            location.href = "[[@{/board/register}]]";
-        }
-    </script>
 </head>
 <body>
     <h1>Sample Springboot Summernote</h1>
 
-    <div class=" board-list">
+    <div class="board-list">
         <table>
             <colgroup>
                 <col width="10%" />
@@ -40,15 +35,15 @@
                     <td colspan="3" class="text-center">데이터 없음</td>
                 </tr>
                 <tr th:if="${boards.size()} > 0" th:each="board: ${boards}">
-                    <td th:text="${board.seq}" class="text-center"></td>
-                    <td><a th:href="@{/board/detail/{seq}(seq=${board.seq})}" th:text="${board.title}"></a></td>
+                    <td th:text="${board.boardId}" class="text-center"></td>
+                    <td><a th:href="@{/board/detail/{id}(id=${board.boardId})}" th:text="${board.title}"></a></td>
                     <td th:text="${board.createdAt}" class="text-center"></td>
                 </tr>
             </tbody>
         </table>
 
         <div class="board-buttons">
-            <button class="pure-button pure-button-primary" onclick="fnWriteForm()">글쓰기</button>
+            <a th:href="@{/board/register}"><button>등록</button></a>
         </div>
     </div>
 

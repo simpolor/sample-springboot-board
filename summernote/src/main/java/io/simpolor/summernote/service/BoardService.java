@@ -1,65 +1,57 @@
 package io.simpolor.summernote.service;
 
-import io.simpolor.summernote.model.BoardDto;
+import io.simpolor.summernote.repository.BoardRepository;
+import io.simpolor.summernote.repository.entity.Board;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    long seq = 0;
-    Map<Long, BoardDto> boardMap = new HashMap<>();
+    private final BoardRepository boardRepository;
 
-    public List<BoardDto> list(){
-
-        if(boardMap.isEmpty()){
-            return new ArrayList<>();
-        }
-
-        return boardMap.values().stream().collect(Collectors.toList());
+    public List<Board> getAll(){
+        return boardRepository.findAll();
     }
 
-    public BoardDto get(long seq){
+    public Board get(long id){
 
-        BoardDto boardDto = boardMap.get(seq);
-        if(Objects.isNull(boardDto)){
-            throw new EntityNotFoundException("seq : "+seq);
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if(!optionalBoard.isPresent()){
+            throw new EntityNotFoundException("boardId : "+id);
         }
 
-        return boardDto;
+        return optionalBoard.get();
     }
 
-    public BoardDto create(BoardDto boardDto){
+    public void create(Board board){
 
-        seq = seq + 1;
-        boardDto.setSeq(seq);
-        boardMap.put(seq, boardDto);
-
-        return boardDto;
+        boardRepository.save(board);
     }
 
-    public BoardDto update(BoardDto boardDto){
+    public void update(Board board){
 
-        BoardDto original = boardMap.get(boardDto.getSeq());
-        if(Objects.isNull(original)){
-            throw new EntityNotFoundException("seq : "+boardDto.getSeq());
+        Optional<Board> optionalBoard = boardRepository.findById(board.getBoardId());
+        if(!optionalBoard.isPresent()){
+            throw new EntityNotFoundException("boardId : "+board.getBoardId());
         }
 
-        boardMap.put(boardDto.getSeq(), boardDto);
-
-        return boardDto;
+        boardRepository.save(board);
     }
 
-    public void delete(long seq){
+    public void delete(long id){
 
-        BoardDto original = boardMap.get(seq);
-        if(Objects.isNull(original)){
-            throw new EntityNotFoundException("seq : "+seq);
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if(!optionalBoard.isPresent()){
+            throw new EntityNotFoundException("boardId : "+id);
         }
-        boardMap.remove(seq);
+
+        boardRepository.deleteById(id);
     }
 
 

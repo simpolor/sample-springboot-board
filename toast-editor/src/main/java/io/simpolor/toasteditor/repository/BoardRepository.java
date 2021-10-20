@@ -1,0 +1,8 @@
+package io.simpolor.toasteditor.repository;
+
+import io.simpolor.toasteditor.repository.entity.Board;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
+
+}

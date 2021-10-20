@@ -3,6 +3,7 @@ package io.simpolor.toasteditor.controller;
 import com.google.gson.JsonObject;
 import io.simpolor.toasteditor.component.EditorFileUploader;
 import io.simpolor.toasteditor.model.BoardDto;
+import io.simpolor.toasteditor.repository.entity.Board;
 import io.simpolor.toasteditor.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,63 +26,71 @@ public class BoardController {
 	@GetMapping("/list")
 	public ModelAndView list(ModelAndView mav) {
 
-		List<BoardDto> boardDtos = boardService.list();
+		List<Board> boards = boardService.getAll();
 
-		mav.addObject("boards", boardDtos);
-		mav.setViewName("board-list");
+		mav.addObject("boards", BoardDto.of(boards));
+		mav.setViewName("board_list");
 		return mav;
 	}
 
-	@GetMapping("/detail/{seq}")
-	public ModelAndView detail(ModelAndView mav, @PathVariable long seq) {
+	@GetMapping("/detail/{boardId}")
+	public ModelAndView detail(ModelAndView mav,
+							   @PathVariable long boardId) {
 
-		BoardDto boardDto = boardService.get(seq);
+		Board board = boardService.get(boardId);
 
-		mav.addObject("board", boardDto);
-		mav.setViewName("board-detail");
+		mav.addObject("board", BoardDto.of(board));
+		mav.setViewName("board_detail");
 		return mav;
 	}
 
 	@GetMapping("/register")
 	public ModelAndView registerForm(ModelAndView mav) {
 
-		mav.setViewName("board-register");
+		mav.setViewName("board_register");
 		return mav;
 	}
 
 	@PostMapping("/register")
-	public ModelAndView write(ModelAndView mav, BoardDto boardDto) {
+	public ModelAndView register(ModelAndView mav,
+								 BoardDto boardDto) {
 
-		BoardDto boardDto1 = boardService.create(boardDto);
+		Board board = boardDto.toEntity();
+		boardService.create(board);
 
-		mav.setViewName("redirect:/board/detail/"+boardDto1.getSeq());
+		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
 		return mav;
 	}
 
-	@GetMapping("/modify/{seq}")
-	public ModelAndView modifyForm(ModelAndView mav, @PathVariable Long seq) {
+	@GetMapping("/modify/{boardId}")
+	public ModelAndView modifyForm(ModelAndView mav,
+								   @PathVariable Long boardId) {
 
-		BoardDto boardDto = boardService.get(seq);
+		Board board = boardService.get(boardId);
 
-		mav.addObject("board", boardDto);
-		mav.setViewName("board-modify");
+		mav.addObject("board", BoardDto.of(board));
+		mav.setViewName("board_modify");
 		return mav;
 	}
 
-	@PostMapping("/modify/{seq}")
-	public ModelAndView modify(ModelAndView mav, @PathVariable Long seq, BoardDto boardDto) {
+	@PostMapping("/modify/{boardId}")
+	public ModelAndView modify(ModelAndView mav,
+							   @PathVariable Long boardId,
+							   BoardDto boardDto) {
 
-		boardDto.setSeq(seq);
-		BoardDto boardDto1 = boardService.update(boardDto);
+		boardDto.setBoardId(boardId);
+		Board board = boardDto.toEntity();
+		boardService.update(board);
 
-		mav.setViewName("redirect:/board/detail/"+boardDto1.getSeq());
+		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
 		return mav;
 	}
 
-	@PostMapping("/delete/{seq}")
-	public ModelAndView delete(ModelAndView mav, @PathVariable Long seq) {
+	@PostMapping("/delete/{boardId}")
+	public ModelAndView delete(ModelAndView mav,
+							   @PathVariable Long boardId) {
 
-		boardService.delete(seq);
+		boardService.delete(boardId);
 
 		mav.setViewName("redirect:/board/list");
 		return mav;
