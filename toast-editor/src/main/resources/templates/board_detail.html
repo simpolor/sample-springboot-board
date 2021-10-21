@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sample Springboot Summernote</title>
-
+    <title>Sample Springboot Toast-editor</title>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <style>
         .board-view { width: 1000px; padding: 5px }
         .board-title { width: 100%; height: 40px; line-height: 40px; border: 1px #ddd solid; }
         .board-content { width: 100%; min-height: 500px; border: 1px #ddd solid; margin-top: 10px; }
         .board-buttons { margin-top: 10px; text-align: right; }
     </style>
-
+    <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
     <script>
         function fnDelete(){
             document.getElementById("boardForm").submit();
@@ -24,10 +24,7 @@
         <div class="board-title">
             <span th:if="${board!= null}" th:text="${board.title}"></span>
         </div>
-        <div class="board-content">
-            <p th:if="${board!= null}" th:utext="${board.content}"></p>
-        </div>
-
+        <div id="viewer" class="board-content"></div>
         <form th:id="boardForm" th:action="@{/board/delete/{id}(id=${board.boardId})}" th:method="post" th:object="${board}"></form>
 
         <div class="board-buttons">
@@ -36,6 +33,17 @@
             <a th:href="@{/board/modify/{id}(id=${board.boardId})}"><button>수정</button></a>
         </div>
     </div>
+
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script>
+        var content = '[[${board.content}]]';
+        const viewer = toastui.Editor.factory({
+            el: document.querySelector('#viewer'),
+            viewer: true,
+            height: '500px'
+        });
+        viewer.setMarkdown(content);
+    </script>
 </body>
 </div>
 </html>

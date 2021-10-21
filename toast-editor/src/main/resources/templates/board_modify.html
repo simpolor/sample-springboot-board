@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sample Springboot Summernote</title>
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.5/dist/css/bootstrap.css}">
-    <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/3.3.5/dist/js/bootstrap.js}"></script>
-
-    <link th:rel="stylesheet" th:href="@{/webjars/summernote/0.8.12/dist/summernote.css}">
-    <script th:src="@{/webjars/summernote/0.8.12/dist/summernote.js}"></script>
-
+    <title>Sample Springboot Toast-editor</title>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <style>
         . { margin: 0; padding: 0; }
         .board-form { width: 1000px; padding: 5px }
@@ -17,13 +11,8 @@
         .board-content { width: 100%; height: 500px; }
         .board-buttons { margin-top: 10px; text-align: right; }
     </style>
+    <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
     <script>
-        $(document).ready(function() {
-            $('#summernote').summernote({
-                height: 435
-            });
-        });
-
         function fnModify() {
             document.getElementById("boardForm").submit();
         }
@@ -37,9 +26,7 @@
             <div class="board-title">
                 <input th:name="title" th:type="text" th:field="${board.title}" />
             </div>
-            <div class="board-content">
-                <textarea id="summernote" th:name="content" th:field="${board.content}"></textarea>
-            </div>
+            <div id="editor" class="board-content"></div>
         </form>
         <div class="board-buttons">
             <a th:href="@{/board/list}"><button>목록</button></a>
@@ -47,6 +34,18 @@
             <button onclick="fnModify()">수정</button>
         </div>
     </div>
+
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script>
+        var content = '[[${board.content}]]';
+        const Editor = toastui.Editor;
+        const editor = new Editor({
+            el: document.querySelector('#editor'),
+            height: '600px',
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            initialValue: content
+        });
+    </script>
 </body>
-</div>
 </html>
