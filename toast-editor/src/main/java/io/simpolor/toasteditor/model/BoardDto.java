@@ -2,6 +2,7 @@ package io.simpolor.toasteditor.model;
 
 import io.simpolor.toasteditor.repository.entity.Board;
 import lombok.*;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +29,8 @@ public class BoardDto {
         return Board.builder()
                 .boardId(this.boardId)
                 .title(this.title)
-                .content(this.content)
+                //.content(this.content)
+                .content(StringEscapeUtils.escapeHtml4(this.content))
                 .build();
     }
 
@@ -36,7 +38,8 @@ public class BoardDto {
         return BoardDto.builder()
                 .boardId(board.getBoardId())
                 .title(board.getTitle())
-                .content(board.getContent())
+                .content(StringEscapeUtils.unescapeHtml4(board.getContent()))
+                // .content(board.getContent())
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())
                 .build();

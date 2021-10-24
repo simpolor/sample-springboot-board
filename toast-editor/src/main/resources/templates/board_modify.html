@@ -27,6 +27,9 @@
                 <input th:name="title" th:type="text" th:field="${board.title}" />
             </div>
             <div id="editor" class="board-content"></div>
+            <div class="board-content">
+                <textarea id="content" th:if="${board!= null}" th:text="${board.content}"></textarea>
+            </div>
         </form>
         <div class="board-buttons">
             <a th:href="@{/board/list}"><button>목록</button></a>
@@ -37,14 +40,21 @@
 
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
-        var content = '[[${board.content}]]';
+        const content = document.getElementById("content");
+        let htmlText = content.value.replace(/(\r\n|\n\r|\r|\n)/g, '\n');
+
         const Editor = toastui.Editor;
         const editor = new Editor({
             el: document.querySelector('#editor'),
             height: '600px',
             initialEditType: 'markdown',
             previewStyle: 'vertical',
-            initialValue: content
+            initialValue: htmlText
+            /*initialValue: 'asdasd\n' +
+                '\n' +
+                '# 1\n' +
+                '\n' +
+                '## 2'*/
         });
     </script>
 </body>

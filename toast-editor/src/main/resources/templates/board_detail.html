@@ -18,13 +18,16 @@
 
 </head>
 <body>
-    <h1>Sample Springboot Summernote</h1>
+    <h1>Sample Springboot Toast-editor</h1>
 
     <div class="board-view">
         <div class="board-title">
             <span th:if="${board!= null}" th:text="${board.title}"></span>
         </div>
         <div id="viewer" class="board-content"></div>
+        <div class="board-content">
+            <textarea id="content" th:if="${board!= null}" th:text="${board.content}"></textarea>
+        </div>
         <form th:id="boardForm" th:action="@{/board/delete/{id}(id=${board.boardId})}" th:method="post" th:object="${board}"></form>
 
         <div class="board-buttons">
@@ -36,13 +39,20 @@
 
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
-        var content = '[[${board.content}]]';
+        const content = document.getElementById("content");
+        // alert("content : "+content.value);
+        let htmlText = content.value.replace(/(\r\n|\n\r|\r|\n)/g, '\n');
         const viewer = toastui.Editor.factory({
             el: document.querySelector('#viewer'),
             viewer: true,
-            height: '500px'
+            height: '600px',
+            initialValue: htmlText
+            /*initialValue: 'asdasd\n' +
+                '\n' +
+                '# 1\n' +
+                '\n' +
+                '## 2'*/
         });
-        viewer.setMarkdown(content);
     </script>
 </body>
 </div>

@@ -14,12 +14,17 @@
     <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
     <script>
         function fnWrite() {
-            var form = document.getElementById("boardForm")
-            var textarea = document.createElement('textarea');
-            textarea.setAttribute("name", "content");
-            textarea.innerText = editor.getMarkdown();
+            var form = document.getElementById("boardForm");
+            var content = document.getElementById("content");
+
+            // content.value = editor.getHTML();
+            content.value = editor.getMarkdown();
+            // alert(content.value);
+            // alert(content);
+            // alert("editor.getMarkdown() : \n"+editor.getMarkdown())
+            // $("#content").val(editor.getMarkdown());
+            // alert($("#content").val());
             // textarea.innerText = editor.getHTML();
-            form.appendChild(textarea);
             form.submit();
         }
     </script>
@@ -33,6 +38,7 @@
                 <input type="text" th:name="title" placeholder="제목" />
             </div>
             <div id="editor" class="board-content"></div>
+            <textarea name="content" id="content" style="display: none"></textarea>
         </form>
         <div class="board-buttons">
             <a th:href="@{/board/list}"><button>목록</button></a>

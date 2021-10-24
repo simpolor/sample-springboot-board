@@ -7,6 +7,8 @@ import io.simpolor.toasteditor.repository.entity.Board;
 import io.simpolor.toasteditor.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +41,8 @@ public class BoardController {
 
 		Board board = boardService.get(boardId);
 
+		System.out.println("board : "+board.getContent());
+
 		mav.addObject("board", BoardDto.of(board));
 		mav.setViewName("board_detail");
 		return mav;
@@ -54,6 +58,15 @@ public class BoardController {
 	@PostMapping("/register")
 	public ModelAndView register(ModelAndView mav,
 								 BoardDto boardDto) {
+
+		System.out.println("boardDto : "+boardDto.getContent());
+
+		String content3 = StringEscapeUtils.escapeHtml3(boardDto.getContent());
+		String content4 = StringEscapeUtils.escapeHtml4(boardDto.getContent());
+		System.out.println("escapeHtml3 : "+ content3);
+		System.out.println("escapeHtml4 : "+ content4);
+		System.out.println("unescapeHtml3 : "+ StringEscapeUtils.unescapeHtml3(content3));
+		System.out.println("unescapeHtml4 : "+ StringEscapeUtils.unescapeHtml4(content4));
 
 		Board board = boardDto.toEntity();
 		boardService.create(board);
