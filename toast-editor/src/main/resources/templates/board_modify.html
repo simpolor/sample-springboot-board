@@ -9,7 +9,9 @@
         .board-title { width: 100%; height: 40px; }
         .board-title>input { width: 100%; height: 30px; }
         .board-content { width: 100%; height: 500px; }
+        .board-content2 { display: none; }
         .board-buttons { margin-top: 10px; text-align: right; }
+        #content { display: none; }
     </style>
     <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
     <script>
@@ -27,7 +29,7 @@
                 <input th:name="title" th:type="text" th:field="${board.title}" />
             </div>
             <div id="editor" class="board-content"></div>
-            <div class="board-content">
+            <div class="board-content2">
                 <textarea id="content" th:if="${board!= null}" th:text="${board.content}"></textarea>
             </div>
         </form>
@@ -40,21 +42,17 @@
 
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script>
-        const content = document.getElementById("content");
-        let htmlText = content.value.replace(/(\r\n|\n\r|\r|\n)/g, '\n');
-
+        let content = document.getElementById("content");
+        if(content != ''){
+            content = content.value.replace(/(\r\n|\n\r|\r|\n)/g, '\n');
+        }
         const Editor = toastui.Editor;
         const editor = new Editor({
             el: document.querySelector('#editor'),
             height: '600px',
             initialEditType: 'markdown',
             previewStyle: 'vertical',
-            initialValue: htmlText
-            /*initialValue: 'asdasd\n' +
-                '\n' +
-                '# 1\n' +
-                '\n' +
-                '## 2'*/
+            initialValue: content
         });
     </script>
 </body>
