@@ -23,16 +23,16 @@
             $('#summernote').summernote({
                 height: 435,
                 callbacks: {	//이미지 첨부하는 부분
-                    onImageUpload : function(files) {
-                        uploadImageFile(files[0], this);
+                    onImageUpload : function(images) {
+                        uploadImageFile(images[0], this);
                     }
                 }
             });
         });
 
-        function uploadImageFile(file, editor) {
+        function uploadImageFile(image, editor) {
             const data = new FormData();
-            data.append("file", file);
+            data.append("image", image);
 
             $.ajax({
                 data : data,

@@ -98,7 +98,7 @@ public class BoardController {
 
 	@PostMapping(value = "/upload", produces = "application/json")
 	@ResponseBody
-	public JsonObject upload(@RequestParam("file") MultipartFile multipartFile) {
+	public JsonObject upload(@RequestParam("image") MultipartFile multipartFile) {
 
 		return editorFileUploader.upload(multipartFile);
 	}
