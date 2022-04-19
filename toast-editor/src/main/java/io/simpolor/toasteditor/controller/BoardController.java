@@ -7,8 +7,6 @@ import io.simpolor.toasteditor.repository.entity.Board;
 import io.simpolor.toasteditor.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,11 +35,9 @@ public class BoardController {
 
 	@GetMapping("/detail/{boardId}")
 	public ModelAndView detail(ModelAndView mav,
-							   @PathVariable long boardId) {
+							   @PathVariable Long boardId) {
 
 		Board board = boardService.get(boardId);
-
-		System.out.println("board : "+board.getContent());
 
 		mav.addObject("board", BoardDto.of(board));
 		mav.setViewName("board_detail");
@@ -57,19 +53,9 @@ public class BoardController {
 
 	@PostMapping("/register")
 	public ModelAndView register(ModelAndView mav,
-								 BoardDto boardDto) {
+								 BoardDto request) {
 
-		System.out.println("boardDto : "+boardDto.getContent());
-
-		String content3 = StringEscapeUtils.escapeHtml3(boardDto.getContent());
-		String content4 = StringEscapeUtils.escapeHtml4(boardDto.getContent());
-		System.out.println("escapeHtml3 : "+ content3);
-		System.out.println("escapeHtml4 : "+ content4);
-		System.out.println("unescapeHtml3 : "+ StringEscapeUtils.unescapeHtml3(content3));
-		System.out.println("unescapeHtml4 : "+ StringEscapeUtils.unescapeHtml4(content4));
-
-		Board board = boardDto.toEntity();
-		boardService.create(board);
+		Board board = boardService.create(request.toEntity());
 
 		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
 		return mav;
@@ -89,13 +75,12 @@ public class BoardController {
 	@PostMapping("/modify/{boardId}")
 	public ModelAndView modify(ModelAndView mav,
 							   @PathVariable Long boardId,
-							   BoardDto boardDto) {
+							   BoardDto request) {
 
-		boardDto.setBoardId(boardId);
-		Board board = boardDto.toEntity();
-		boardService.update(board);
+		request.setId(boardId);
+		boardService.update(request.toEntity());
 
-		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
+		mav.setViewName("redirect:/board/detail/"+request.getId());
 		return mav;
 	}
 

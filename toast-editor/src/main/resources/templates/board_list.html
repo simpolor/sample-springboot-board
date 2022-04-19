@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sample Springboot Summernote</title>
+    <title>Sample Springboot Toast-editor</title>
 
     <style>
         .board-list { width: 1000px; }
@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <h1>Sample Springboot Summernote</h1>
+    <h1>Sample Springboot Toast-editor</h1>
 
     <div class="board-list">
         <table>
@@ -35,8 +35,8 @@
                     <td colspan="3" class="text-center">데이터 없음</td>
                 </tr>
                 <tr th:if="${boards.size()} > 0" th:each="board: ${boards}">
-                    <td th:text="${board.boardId}" class="text-center"></td>
-                    <td><a th:href="@{/board/detail/{id}(id=${board.boardId})}" th:text="${board.title}"></a></td>
+                    <td th:text="${board.id}" class="text-center"></td>
+                    <td><a th:href="@{/board/detail/{id}(id=${board.id})}" th:text="${board.title}"></a></td>
                     <td th:text="${board.createdAt}" class="text-center"></td>
                 </tr>
             </tbody>

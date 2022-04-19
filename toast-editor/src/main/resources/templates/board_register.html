@@ -38,7 +38,7 @@
                 <input type="text" th:name="title" placeholder="제목" />
             </div>
             <div id="editor" class="board-content"></div>
-            <textarea name="content" id="content" style="display: none"></textarea>
+            <textarea th:name="content" th:id="content" style="display: none"></textarea>
         </form>
         <div class="board-buttons">
             <a th:href="@{/board/list}"><button>목록</button></a>
@@ -71,7 +71,7 @@
             const a = $.ajax({
                 data : data,
                 type : "POST",
-                url : "/board/upload",
+                url : "/file/upload",
                 contentType : false,
                 processData : false,
                 async: false,

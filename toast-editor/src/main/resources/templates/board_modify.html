@@ -16,26 +16,29 @@
     <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
     <script>
         function fnModify() {
-            document.getElementById("boardForm").submit();
+            var form = document.getElementById("boardForm");
+            var content = document.getElementById("content");
+            content.value = editor.getMarkdown();
+            form.submit();
         }
     </script>
 </head>
 <body>
-    <h1>Sample Springboot Summernote</h1>
+    <h1>Sample Springboot Toast-editor</h1>
 
     <div class="board-form">
-        <form th:id="boardForm" th:action="@{/board/modify/{id}(id=${board.boardId})}" th:method="post" th:object="${board}">
+        <form th:id="boardForm" th:action="@{/board/modify/{id}(id=${board.id})}" th:method="post" th:object="${board}">
             <div class="board-title">
                 <input th:name="title" th:type="text" th:field="${board.title}" />
             </div>
             <div id="editor" class="board-content"></div>
             <div class="board-content2">
-                <textarea id="content" th:if="${board!= null}" th:text="${board.content}"></textarea>
+                <textarea th:name="content" th:id="content" th:if="${board!= null}" th:text="${board.content}"></textarea>
             </div>
         </form>
         <div class="board-buttons">
             <a th:href="@{/board/list}"><button>목록</button></a>
-            <a th:href="@{/board/detail/{id}(id=${board.boardId})}"><button>취소</button></a>
+            <a th:href="@{/board/detail/{id}(id=${board.id})}"><button>취소</button></a>
             <button onclick="fnModify()">수정</button>
         </div>
     </div>

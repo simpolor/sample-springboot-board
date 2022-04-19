@@ -32,8 +32,6 @@ public class EditorFileUploader {
             InputStream fileStream = multipartFile.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, saveFile); //파일 저장
 
-            System.out.println("여기까지는 왔는가?! : "+savedFileName);
-
             jsonObject.addProperty("image_url", "/upload/"+savedFileName);
             jsonObject.addProperty("message", "success");
 
