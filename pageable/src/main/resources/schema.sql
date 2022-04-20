@@ -1,0 +1,8 @@
+CREATE TABLE `board` (
+  `board_id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '번호',
+  `title` VARCHAR(255) NOT NULL COMMENT '제목',
+  `content` VARCHAR(2000) NULL DEFAULT NULL COMMENT '내용',
+  `created_at` DATETIME NULL DEFAULT NULL COMMENT '생성일',
+  `updated_at` DATETIME NULL DEFAULT NULL COMMENT '수정일',
+  PRIMARY KEY (`board_id`)
+);

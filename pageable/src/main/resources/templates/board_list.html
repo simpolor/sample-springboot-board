@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sample Springboot Pageable</title>
+
+    <style>
+        .board-list { width: 1000px; }
+        .board-list>table { width: 100%; }
+        .board-list>table>thead>tr, .board-list>table>tbody>tr { height: 40px; }
+        .board-list>table>thead>tr>th { border: 1px #ddd solid; background: #f5f5f5; }
+        .board-list>table>tbody>tr>td { border: 1px #ddd solid; }
+        .board-buttons { margin-top: 10px; text-align: right; }
+        .text-center { text-align: center; }
+
+        #pagination { text-align: center }
+        #pagination a { padding: 0 10px; text-decoration: none; color: #000000; }
+        #pagination a:hover { color: #FF0000; }
+        #pagination .active { font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Sample Springboot Pageable</h1>
+
+    <div>
+        <span th:text="'Totalcount : ' + ${boardPage.getTotalElements()}">0</span>
+        <span th:text="'Totalcount : ' + ${boardPage.getNumber()}">0</span>
+    </div>
+
+    <div class="board-list">
+        <table>
+            <colgroup>
+                <col width="10%" />
+                <col width="70%" />
+                <col width="20%" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>등록일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:unless="${boardPage.size} > 0">
+                    <td colspan="3" class="text-center">데이터 없음</td>
+                </tr>
+                <tr th:if="${boardPage.size} > 0" th:each="board: ${boardPage.getContent()}">
+                    <td th:text="${board.id}" class="text-center"></td>
+                    <td><a th:href="@{/board/detail/{id}(id=${board.id})}" th:text="${board.title}"></a></td>
+                    <td th:text="${board.createdAt}" class="text-center"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="pagination">
+
+            <a th:if="${boardPage.totalPages > 0}"
+               th:each="pageNumber : ${pageNumbers}"
+               th:href="@{/board/list(size=${boardPage.size}, page=${pageNumber})}"
+               th:text=${pageNumber}
+               th:class="${pageNumber==(boardPage.number+1)} ? active"></a>
+        </div>
+
+        <div class="board-buttons">
+            <a th:href="@{/board/register}"><button>등록</button></a>
+        </div>
+    </div>
+
+</body>
+</html>
