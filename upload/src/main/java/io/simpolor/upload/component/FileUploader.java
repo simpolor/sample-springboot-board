@@ -28,6 +28,15 @@ public class FileUploader {
     @Value("${application.files.path}")
     private String rootFilePath;
 
+    /***
+     * MultipartFile
+     * - getName() : 파라미터 이름
+     * - getOriginalFilename() : 파일 이름
+     * - isEmpty() : 파일 존재 유무
+     * - getBytes : 파일 데이터
+     * - getInputStream() : 파일 데이터를 읽어오는 InputStream을 얻어옴
+     * - transferTo(File file) : 파일 데이터를 지정한 파일로 저장
+     */
     public FileInfo createFile(MultipartFile multipartFile, String directory){
 
         if(Objects.nonNull(multipartFile) && !multipartFile.isEmpty() && multipartFile.getSize() > 0){
@@ -43,6 +52,7 @@ public class FileUploader {
             File saveFile = createFile(saveFilePath, saveFileName);
 
             try {
+                // MultipartFile 클래스의 transferTo 메소드를 이용한 방법
                 multipartFile.transferTo(saveFile);
                 if(EXTENSIONS_IMAGE.contains(fileExt)){
                     createThumbnail(saveFile, saveFilePath, saveFileName);
@@ -68,24 +78,16 @@ public class FileUploader {
         if(Objects.nonNull(multipartFiles)){
             for(MultipartFile multipartFile : multipartFiles){
                 FileInfo fileInfo = createFile(multipartFile, directory);
-                fileInfos.add(fileInfo);
+                if(Objects.nonNull(fileInfo)){
+                    fileInfos.add(fileInfo);
+                }
             }
         }
 
         return fileInfos;
     }
 
-
-    /***
-     * MultipartFile
-     * - getName() : 파라미터 이름
-     * - getOriginalFilename() : 파일 이름
-     * - isEmpty() : 파일 존재 유무
-     * - getBytes : 파일 데이터
-     * - getInputStream() : 파일 데이터를 읽어오는 InputStream을 얻어옴
-     * - transferTo(File file) : 파일 데이터를 지정한 파일로 저장
-     */
-    public FileInfo createFile2(MultipartFile multipartFile, String directory){
+    public FileInfo newCreateFile(MultipartFile multipartFile, String directory){
 
         if(Objects.nonNull(multipartFile) && !multipartFile.isEmpty() && multipartFile.getSize() != 0){
 
@@ -107,6 +109,9 @@ public class FileUploader {
                     outputStream.write(buffer, 0, readByte); // 파일 생성
                 }
 
+                // FileUtils를 copyInputStreamToFile 메소드를 이용한 방법
+                // FileUtils.copyInputStreamToFile(inputStream, saveFile);
+
                 return FileInfo.builder()
                         .orgFileName(orgFileName)
                         .savedFileName(saveFileName)
@@ -116,36 +121,6 @@ public class FileUploader {
 
             }catch (IOException ioe) {
                 log.error("createFile2 error: {}", ioe.getMessage());
-            }
-        }
-
-        return null;
-    }
-
-    public FileInfo createFile3(MultipartFile multipartFile, String directory){
-
-        if(Objects.nonNull(multipartFile) && !multipartFile.isEmpty() && multipartFile.getSize() != 0){
-
-            String orgFileName = multipartFile.getOriginalFilename();
-            long fileSize = multipartFile.getSize();
-            String fileExt = FilenameUtils.getExtension(orgFileName);
-            String saveFilePath = makeDirectory(directory);
-            String saveFileName = UUID.randomUUID() + DOT + fileExt;
-            File saveFile = createFile(saveFilePath, saveFileName);
-
-            try {
-                InputStream fileStream = multipartFile.getInputStream();
-                FileUtils.copyInputStreamToFile(fileStream, saveFile); //파일 저장
-
-                return FileInfo.builder()
-                        .orgFileName(orgFileName)
-                        .savedFileName(saveFileName)
-                        .fileSize(fileSize)
-                        .fileExt(fileExt)
-                        .build();
-
-            }catch (IOException ioe) {
-                log.error("createFile3 error: {}", ioe.getMessage());
             }
         }
 
