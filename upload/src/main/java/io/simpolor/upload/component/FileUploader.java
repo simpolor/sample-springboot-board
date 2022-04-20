@@ -120,7 +120,7 @@ public class FileUploader {
                         .build();
 
             }catch (IOException ioe) {
-                log.error("createFile2 error: {}", ioe.getMessage());
+                log.error("newCreateFile error: {}", ioe.getMessage());
             }
         }
 

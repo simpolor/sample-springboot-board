@@ -78,9 +78,7 @@ public class FileController {
 									   @Validated FileDto request) {
 
 		List<FileUploader.FileInfo> fileInfos = fileUploader.createFiles(request.getUploadFiles(), "multiple");
-		System.out.println("fileInfos : "+fileInfos);
 		if(!CollectionUtils.isEmpty(fileInfos)){
-			System.out.println("fileInfos : "+fileInfos.size());
 			mav.addObject("fileInfos", FileDto.FileDetail.of(fileInfos));
 		}
 
