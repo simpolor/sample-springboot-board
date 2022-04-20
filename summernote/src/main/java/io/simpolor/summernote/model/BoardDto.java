@@ -14,19 +14,16 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class BoardDto {
 
-    private Long boardId;
-
+    private Long id;
     private String title;
-
     private String content;
 
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
     public Board toEntity(){
         return Board.builder()
-                .boardId(this.boardId)
+                .boardId(this.id)
                 .title(this.title)
                 .content(this.content)
                 .build();
@@ -34,7 +31,7 @@ public class BoardDto {
 
     public static BoardDto of(Board board){
         return BoardDto.builder()
-                .boardId(board.getBoardId())
+                .id(board.getBoardId())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt())

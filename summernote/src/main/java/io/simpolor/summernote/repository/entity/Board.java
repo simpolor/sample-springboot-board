@@ -18,9 +18,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
-
     private String title;
-
     private String content;
 
     @CreationTimestamp

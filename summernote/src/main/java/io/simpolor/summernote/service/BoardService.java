@@ -19,11 +19,11 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public Board get(long id){
+    public Board get(Long boardId){
 
-        Optional<Board> optionalBoard = boardRepository.findById(id);
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
         if(!optionalBoard.isPresent()){
-            throw new EntityNotFoundException("boardId : "+id);
+            throw new EntityNotFoundException("boardId : "+boardId);
         }
 
         return optionalBoard.get();
@@ -44,14 +44,14 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public void delete(long id){
+    public void delete(Long boardId){
 
-        Optional<Board> optionalBoard = boardRepository.findById(id);
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
         if(!optionalBoard.isPresent()){
-            throw new EntityNotFoundException("boardId : "+id);
+            throw new EntityNotFoundException("boardId : "+boardId);
         }
 
-        boardRepository.deleteById(id);
+        boardRepository.deleteById(boardId);
     }
 
 

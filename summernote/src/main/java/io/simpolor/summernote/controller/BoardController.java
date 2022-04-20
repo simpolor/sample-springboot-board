@@ -78,7 +78,7 @@ public class BoardController {
 							   @PathVariable Long boardId,
 							   BoardDto boardDto) {
 
-		boardDto.setBoardId(boardId);
+		boardDto.setId(boardId);
 		Board board = boardDto.toEntity();
 		boardService.update(board);
 
@@ -94,13 +94,6 @@ public class BoardController {
 
 		mav.setViewName("redirect:/board/list");
 		return mav;
-	}
-
-	@PostMapping(value = "/upload", produces = "application/json")
-	@ResponseBody
-	public JsonObject upload(@RequestParam("image") MultipartFile multipartFile) {
-
-		return editorFileUploader.upload(multipartFile);
 	}
 
 }
