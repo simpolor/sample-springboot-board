@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Message</title>
+</head>
+<body>
+
+    <a th:href="@{/message(lang=ko)}">한국어</a> |
+    <a th:href="@{/message(lang=en)}">English</a>
+
+    <hr />
+
+    <span th:text="#{site.title}">default text</span><br />
+    <span th:text="#{site.count('5')}"default text></span><br />
+    <span th:text="${clientLocale}">default locale</span><br />
+    <span th:text="${sessionLocale}"default locale></span><br />
+    <span th:text="${siteCount}"default locale></span><br />
+
+</body>
+</html>
