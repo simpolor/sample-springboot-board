@@ -44,7 +44,8 @@
         if(content != ''){
             content = content.value.replace(/(\r\n|\n\r|\r|\n)/g, '\n');
         }
-        const viewer = toastui.Editor.factory({
+        const { Editor } = toastui;
+        const viewer = Editor.factory({
             el: document.querySelector('#viewer'),
             viewer: true,
             height: '600px',

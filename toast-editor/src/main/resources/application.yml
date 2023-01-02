@@ -18,5 +18,5 @@ spring:
 
 application:
   files:
-    path: D:/upload/ # 마지막 "/"을 넣어야함, 주의필요
-    # path: /Users/simpolor/upload/
+    # path: /Users/simpolor/upload/ # 마지막 "/"을 넣어야함, 주의필요
+    path: /Users/parksy/temp/ # 마지막 "/"을 넣어야함, 주의필요
