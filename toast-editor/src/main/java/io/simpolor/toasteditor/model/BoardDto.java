@@ -1,49 +1,63 @@
 package io.simpolor.toasteditor.model;
 
 import io.simpolor.toasteditor.repository.entity.Board;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class BoardDto {
 
-    private Long id;
-    private String title;
-    private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Getter
+    @Setter
+    public static class BoardRequest {
 
-    public Board toEntity(){
-        return Board.builder()
-                .boardId(this.id)
-                .title(this.title)
-                //.content(this.content)
-                .content(StringEscapeUtils.escapeHtml4(this.content))
-                .build();
+        private String title;
+        private String content;
+
+        public Board toEntity(){
+            return this.toEntity(null);
+        }
+
+        public Board toEntity(Long id){
+            Board board = new Board();
+            board.setBoardId(id);
+            board.setTitle(this.title);
+            board.setContent(StringEscapeUtils.escapeHtml4(this.content));
+
+            return board;
+        }
     }
 
-    public static BoardDto of(Board board){
-        return BoardDto.builder()
-                .id(board.getBoardId())
-                .title(board.getTitle())
-                .content(StringEscapeUtils.unescapeHtml4(board.getContent()))
-                // .content(board.getContent())
-                .createdAt(board.getCreatedAt())
-                .updatedAt(board.getUpdatedAt())
-                .build();
+    @Getter
+    @Setter
+    public static class BoardResponse {
+
+        private Long id;
+        private String title;
+        private String content;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public static BoardResponse of(Board board){
+            BoardResponse response = new BoardResponse();
+            response.setId(board.getBoardId());
+            response.setTitle(board.getTitle());
+            response.setContent(StringEscapeUtils.unescapeHtml4(board.getContent()));
+            response.setCreatedAt(board.getCreatedAt());
+            response.setUpdatedAt(board.getUpdatedAt());
+
+            return response;
+        }
+
+        public static List<BoardResponse> of(List<Board> boards){
+            return boards.stream()
+                    .map(BoardResponse::of)
+                    .collect(Collectors.toList());
+        }
     }
 
-    public static List<BoardDto> of(List<Board> boards){
-        return boards.stream()
-                .map(BoardDto::of)
-                .collect(Collectors.toList());
-    }
 }
