@@ -29,9 +29,9 @@ public class BoardService {
         return optionalBoard.get();
     }
 
-    public void create(Board board){
+    public Board create(Board board){
 
-        boardRepository.save(board);
+        return boardRepository.save(board);
     }
 
     public void update(Board board){

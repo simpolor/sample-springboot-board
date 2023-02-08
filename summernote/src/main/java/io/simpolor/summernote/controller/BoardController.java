@@ -1,15 +1,15 @@
 package io.simpolor.summernote.controller;
 
-import com.google.gson.JsonObject;
-import io.simpolor.summernote.component.EditorFileUploader;
 import io.simpolor.summernote.model.BoardDto;
 import io.simpolor.summernote.repository.entity.Board;
 import io.simpolor.summernote.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -21,14 +21,13 @@ import java.util.List;
 public class BoardController {
 
 	private final BoardService boardService;
-	private final EditorFileUploader editorFileUploader;
 
 	@GetMapping("/list")
 	public ModelAndView list(ModelAndView mav) {
 
 		List<Board> boards = boardService.getAll();
 
-		mav.addObject("boards", BoardDto.of(boards));
+		mav.addObject("boardList", BoardDto.BoardResponse.of(boards));
 		mav.setViewName("board_list");
 		return mav;
 	}
@@ -39,7 +38,7 @@ public class BoardController {
 
 		Board board = boardService.get(boardId);
 
-		mav.addObject("board", BoardDto.of(board));
+		mav.addObject("board", BoardDto.BoardResponse.of(board));
 		mav.setViewName("board_detail");
 		return mav;
 	}
@@ -53,10 +52,9 @@ public class BoardController {
 
 	@PostMapping("/register")
 	public ModelAndView register(ModelAndView mav,
-								 BoardDto boardDto) {
+								 BoardDto.BoardRequest request) {
 
-		Board board = boardDto.toEntity();
-		boardService.create(board);
+		Board board = boardService.create(request.toEntity());
 
 		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
 		return mav;
@@ -68,7 +66,7 @@ public class BoardController {
 
 		Board board = boardService.get(boardId);
 
-		mav.addObject("board", BoardDto.of(board));
+		mav.addObject("board", BoardDto.BoardResponse.of(board));
 		mav.setViewName("board_modify");
 		return mav;
 	}
@@ -76,13 +74,11 @@ public class BoardController {
 	@PostMapping("/modify/{boardId}")
 	public ModelAndView modify(ModelAndView mav,
 							   @PathVariable Long boardId,
-							   BoardDto boardDto) {
+							   BoardDto.BoardRequest request) {
 
-		boardDto.setId(boardId);
-		Board board = boardDto.toEntity();
-		boardService.update(board);
+		boardService.update(request.toEntity(boardId));
 
-		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
+		mav.setViewName("redirect:/board/detail/"+boardId);
 		return mav;
 	}
 

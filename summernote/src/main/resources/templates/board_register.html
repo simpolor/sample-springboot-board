@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Sample Springboot Summernote</title>
+    <title>Summernote</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.5/dist/css/bootstrap.css}">
     <script th:src="@{/webjars/jquery/3.4.1/dist/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/3.3.5/dist/js/bootstrap.js}"></script>
@@ -41,7 +41,8 @@
                 contentType : false,
                 processData : false,
                 success: function(data) {
-                    $(editor).summernote('insertImage', data.image_url);
+                    alert(data);
+                    $(editor).summernote('insertImage', data.imageUrl);
                 }
             });
         }
@@ -52,7 +53,7 @@
     </script>
 </head>
 <body>
-    <h1>Sample Springboot Summernote</h1>
+    <h1>Summernote</h1>
 
     <div class="board-form">
         <form th:id="boardForm" th:action="@{/board/register}" th:method="post">

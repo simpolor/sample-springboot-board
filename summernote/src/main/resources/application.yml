@@ -4,6 +4,6 @@ spring:
       preferred-json-mapper: gson
 
 application:
-  files:
-    path: D:/upload/ # 마지막 "/"을 넣어야함, 주의필요
-    # path: /Users/simpolor/upload/
+  file:
+    # path: D:/upload
+    path: /Users/parksy/temp
