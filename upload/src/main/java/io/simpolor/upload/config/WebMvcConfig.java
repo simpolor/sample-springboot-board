@@ -17,14 +17,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final int MAX_SIZE = 100 * 1024 * 1024;
 
-    @Value("${application.files.path}")
-    private String rootFilePath;
+    @Value("${application.upload.path}")
+    private String uploadPath;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:///"+rootFilePath);
+                .addResourceLocations("file:///"+uploadPath+"/");
     }
 
     @Bean

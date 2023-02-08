@@ -1,6 +1,8 @@
 package io.simpolor.upload.controller;
 
-import io.simpolor.upload.component.FileUploader;
+import io.simpolor.upload.component.FileUpload;
+import io.simpolor.upload.component.FileUploadComponent;
+import io.simpolor.upload.component.NewFileUploadComponent;
 import io.simpolor.upload.model.FileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,35 +11,33 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequestMapping(("/file"))
 @RequiredArgsConstructor
 public class FileController {
 
-	private final FileUploader fileUploader;
+	private final FileUploadComponent fileUploadComponent;
+	private final NewFileUploadComponent newFileUploadComponent;
 
-	@GetMapping("/upload")
-	public ModelAndView uploadForm(ModelAndView mav){
+	@GetMapping("/single-upload")
+	public ModelAndView singleUploadForm(ModelAndView mav){
 
-		mav.setViewName("upload");
+		mav.setViewName("single-upload");
 		return mav;
 	}
 
-	@PostMapping("/upload")
-	public ModelAndView upload(ModelAndView mav,
-							   @Validated FileDto request) {
+	@PostMapping("/single-upload")
+	public ModelAndView singleUpload(ModelAndView mav,
+									 @Validated MultipartFile uploadFile) {
 
-		FileUploader.FileInfo fileInfo = fileUploader.createFile(request.getUploadFile(), "test");
-		if(Objects.nonNull(fileInfo)) {
-			mav.addObject("fileInfo", FileDto.FileDetail.of(fileInfo));
+		FileUpload fileUpload = fileUploadComponent.create(uploadFile);
+		if(Boolean.TRUE.equals(fileUpload.getResult())) {
+			mav.addObject("file", FileDto.FileResponse.of(fileUpload));
 		}
 
 		mav.setViewName("result");
@@ -47,39 +47,37 @@ public class FileController {
 	@GetMapping("/new-upload")
 	public ModelAndView newUploadForm(ModelAndView mav){
 
-		mav.setViewName("new-upload");
+		mav.setViewName("single-upload");
 		return mav;
 	}
 
 	@PostMapping("/new-upload")
-	public ModelAndView newUpload(MultipartHttpServletRequest request,
-								  ModelAndView mav) {
+	public ModelAndView newUpload(ModelAndView mav,
+								  @Validated MultipartFile uploadFile) {
 
-		MultipartFile profile = request.getFile("uploadFile");
-
-		FileUploader.FileInfo fileInfo = fileUploader.newCreateFile(profile, "new");
-		if(Objects.nonNull(fileInfo)) {
-			mav.addObject("fileInfo", FileDto.FileDetail.of(fileInfo));
+		FileUpload fileUpload = newFileUploadComponent.create(uploadFile);
+		if(Boolean.TRUE.equals(fileUpload.getResult())) {
+			mav.addObject("file", FileDto.FileResponse.of(fileUpload));
 		}
 
 		mav.setViewName("result");
 		return mav;
 	}
 
-	@GetMapping("/multiple-upload")
-	public ModelAndView uploadMultipleForm(ModelAndView mav){
+	@GetMapping("/multi-upload")
+	public ModelAndView multiUploadForm(ModelAndView mav){
 
-		mav.setViewName("multiple-upload");
+		mav.setViewName("multi-upload");
 		return mav;
 	}
 
-	@PostMapping("/multiple-upload")
-	public ModelAndView uploadMultiple(ModelAndView mav,
-									   @Validated FileDto request) {
+	@PostMapping("/multi-upload")
+	public ModelAndView multiUpload(ModelAndView mav,
+									@Validated MultipartFile[] uploadFiles) {
 
-		List<FileUploader.FileInfo> fileInfos = fileUploader.createFiles(request.getUploadFiles(), "multiple");
-		if(!CollectionUtils.isEmpty(fileInfos)){
-			mav.addObject("fileInfos", FileDto.FileDetail.of(fileInfos));
+		List<FileUpload> fileUploads = fileUploadComponent.create(uploadFiles);
+		if(!CollectionUtils.isEmpty(fileUploads)){
+			mav.addObject("files", FileDto.FileResponse.of(fileUploads));
 		}
 
 		mav.setViewName("result");

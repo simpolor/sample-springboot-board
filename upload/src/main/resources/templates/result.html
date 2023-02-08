@@ -2,28 +2,28 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
-    <title>Result</title>
+    <title>File</title>
 </head>
 <body>
-    <h1>FileInfo</h1>
+    <h1>File</h1>
     <table>
         <tr>
-            <th>orgFileName</th>
+            <th>originFileName</th>
             <th>savedFileName</th>
-            <th>fileExt</th>
-            <th>fileSize</th>
+            <th>extension</th>
+            <th>size</th>
         </tr>
-        <tr th:if="${fileInfo}">
-            <td th:text="${fileInfo.orgFileName}"></td>
-            <td th:text="${fileInfo.savedFileName}"></td>
-            <td th:text="${fileInfo.fileExt}"></td>
-            <td th:text="${fileInfo.fileSize}"></td>
+        <tr th:if="${file}">
+            <td th:text="${file.originFileName}"></td>
+            <td th:text="${file.savedFileName}"></td>
+            <td th:text="${file.extension}"></td>
+            <td th:text="${file.size}"></td>
         </tr>
-        <tr th:if="${fileInfos}" th:each="fileInfo : ${fileInfos}">
-            <td th:text="${fileInfo.orgFileName}"></td>
-            <td th:text="${fileInfo.savedFileName}"></td>
-            <td th:text="${fileInfo.fileExt}"></td>
-            <td th:text="${fileInfo.fileSize}"></td>
+        <tr th:if="${files}" th:each="file : ${files}">
+            <td th:text="${file.originFileName}"></td>
+            <td th:text="${file.savedFileName}"></td>
+            <td th:text="${file.extension}"></td>
+            <td th:text="${file.size}"></td>
         </tr>
     </table>
 
