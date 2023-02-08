@@ -31,6 +31,7 @@ public class FileUploadComponent {
             fileMessage.setResult(Boolean.TRUE);
 
         } catch (IOException e) {
+            log.warn("File upload error: {}", e.getMessage());
             fileMessage.setResult(Boolean.FALSE);
         }
 

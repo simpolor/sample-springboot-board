@@ -41,7 +41,11 @@ public class BoardService {
             throw new EntityNotFoundException("boardId : "+board.getBoardId());
         }
 
-        boardRepository.save(board);
+        Board origin = optionalBoard.get();
+        origin.setTitle(board.getTitle());
+        origin.setContent(board.getContent());
+
+        boardRepository.save(origin);
     }
 
     public void delete(Long boardId){
