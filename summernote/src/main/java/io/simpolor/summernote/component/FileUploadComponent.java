@@ -1,6 +1,5 @@
 package io.simpolor.summernote.component;
 
-import io.simpolor.summernote.model.FileMessage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
