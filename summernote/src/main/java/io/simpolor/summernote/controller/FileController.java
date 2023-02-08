@@ -27,10 +27,10 @@ public class FileController {
 	@ResponseBody
 	public JsonObject upload(@RequestParam("image") MultipartFile multipartFile) {
 
-		FileMessage fileMessage = fileUploadComponent.upload(multipartFile);
-		if(Boolean.TRUE.equals(fileMessage.getResult())){
+		FileUploadComponent.FileUpload fileUpload = fileUploadComponent.upload(multipartFile);
+		if(Boolean.TRUE.equals(fileUpload.getResult())){
 			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("imageUrl", "/upload/"+fileMessage.getSavedFileName());
+			jsonObject.addProperty("imageUrl", "/upload/"+fileUpload.getSavedFileName());
 			jsonObject.addProperty("result", Boolean.TRUE);
 
 			return jsonObject;

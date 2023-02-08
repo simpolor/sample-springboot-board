@@ -41,7 +41,6 @@
                 contentType : false,
                 processData : false,
                 success: function(data) {
-                    alert(data);
                     $(editor).summernote('insertImage', data.imageUrl);
                 }
             });
