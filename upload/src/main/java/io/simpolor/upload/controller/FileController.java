@@ -1,8 +1,8 @@
 package io.simpolor.upload.controller;
 
 import io.simpolor.upload.component.FileUpload;
-import io.simpolor.upload.component.FileUploadComponent;
-import io.simpolor.upload.component.NewFileUploadComponent;
+import io.simpolor.upload.component.FileComponent;
+import io.simpolor.upload.component.NewFileComponent;
 import io.simpolor.upload.model.FileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileController {
 
-	private final FileUploadComponent fileUploadComponent;
-	private final NewFileUploadComponent newFileUploadComponent;
+	private final FileComponent fileComponent;
+	private final NewFileComponent newFileComponent;
 
 	@GetMapping("/single-upload")
 	public ModelAndView singleUploadForm(ModelAndView mav){
@@ -35,7 +35,7 @@ public class FileController {
 	public ModelAndView singleUpload(ModelAndView mav,
 									 @Validated MultipartFile uploadFile) {
 
-		FileUpload fileUpload = fileUploadComponent.create(uploadFile);
+		FileUpload fileUpload = fileComponent.create(uploadFile);
 		if(Boolean.TRUE.equals(fileUpload.getResult())) {
 			mav.addObject("file", FileDto.FileResponse.of(fileUpload));
 		}
@@ -55,7 +55,7 @@ public class FileController {
 	public ModelAndView newUpload(ModelAndView mav,
 								  @Validated MultipartFile uploadFile) {
 
-		FileUpload fileUpload = newFileUploadComponent.create(uploadFile);
+		FileUpload fileUpload = newFileComponent.create(uploadFile);
 		if(Boolean.TRUE.equals(fileUpload.getResult())) {
 			mav.addObject("file", FileDto.FileResponse.of(fileUpload));
 		}
@@ -75,7 +75,7 @@ public class FileController {
 	public ModelAndView multiUpload(ModelAndView mav,
 									@Validated MultipartFile[] uploadFiles) {
 
-		List<FileUpload> fileUploads = fileUploadComponent.create(uploadFiles);
+		List<FileUpload> fileUploads = fileComponent.create(uploadFiles);
 		if(!CollectionUtils.isEmpty(fileUploads)){
 			mav.addObject("files", FileDto.FileResponse.of(fileUploads));
 		}

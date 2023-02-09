@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class FileUploadComponent {
+public class FileComponent {
 
     private static final List<String> EXTENSIONS_IMAGE = Arrays.asList("bmp", "gif", "jpg", "png", "jpeg");
 

@@ -10,7 +10,7 @@ import java.io.*;
 
 @Slf4j
 @Component
-public class NewFileUploadComponent {
+public class NewFileComponent {
 
     @Value("${application.upload.path}")
     private String uploadPath;
