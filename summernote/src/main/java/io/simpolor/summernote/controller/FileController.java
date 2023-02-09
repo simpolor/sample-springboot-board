@@ -1,7 +1,7 @@
 package io.simpolor.summernote.controller;
 
 import com.google.gson.JsonObject;
-import io.simpolor.summernote.component.FileUploadComponent;
+import io.simpolor.summernote.component.FileComponent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,13 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileController {
 
-	private final FileUploadComponent fileUploadComponent;
+	private final FileComponent fileComponent;
 
 	@PostMapping(value = "/upload", produces = "application/json")
 	@ResponseBody
 	public JsonObject upload(@RequestParam("image") MultipartFile multipartFile) {
 
-		FileUploadComponent.FileUpload fileUpload = fileUploadComponent.upload(multipartFile);
+		FileComponent.FileUpload fileUpload = fileComponent.upload(multipartFile);
 		if(Boolean.TRUE.equals(fileUpload.getResult())){
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("imageUrl", "/upload/"+fileUpload.getSavedFileName());

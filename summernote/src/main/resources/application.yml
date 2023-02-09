@@ -4,6 +4,6 @@ spring:
       preferred-json-mapper: gson
 
 application:
-  file:
+  upload:
     # path: D:/upload
     path: /Users/parksy/temp

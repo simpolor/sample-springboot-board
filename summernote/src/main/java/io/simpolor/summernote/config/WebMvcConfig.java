@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Value("${application.file.path}")
-    private String filePath;
+    @Value("${application.upload.path}")
+    private String uploadPath;
 
     /**
      * Appication의 경로가 아닌 외부 경로에 있는 리소스를 url로 불러올 수 있도록 설정
@@ -20,6 +20,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         // filePath 마지막 "/"을 넣어야함, 주의필요
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:///"+filePath+"/");
+                .addResourceLocations("file:///"+uploadPath+"/");
     }
 }
