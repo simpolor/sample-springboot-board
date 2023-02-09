@@ -17,6 +17,6 @@ spring:
       path: /h2-console
 
 application:
-  file:
+  upload:
     # path: /Users/simpolor/upload
     path: /Users/parksy/temp

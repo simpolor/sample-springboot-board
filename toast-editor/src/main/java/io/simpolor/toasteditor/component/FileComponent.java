@@ -3,6 +3,7 @@ package io.simpolor.toasteditor.component;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,18 +15,23 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-public class FileUploadComponent {
+public class FileComponent {
 
-    @Value("${application.file.path}")
-    private String filePath; //저장될 파일 경로
+    @Value("${application.upload.path}")
+    private String uploadPath; //저장될 파일 경로
 
     public FileUpload upload(MultipartFile multipartFile){
 
         FileUpload fileUpload = new FileUpload(multipartFile);
 
-        File file = new File(fileUpload.getSavedFilePath(filePath));
-
         try {
+            File filePath = new File(StringUtils.joinWith(File.separator, uploadPath));
+            if(!filePath.exists()){
+                filePath.mkdir();
+            }
+
+            File file = new File(StringUtils.joinWith(File.separator, filePath, fileUpload.getSavedFileName()));
+
             InputStream fileStream = multipartFile.getInputStream();
             FileUtils.copyInputStreamToFile(fileStream, file); //파일 저장
             fileUpload.setResult(Boolean.TRUE);
@@ -43,21 +49,15 @@ public class FileUploadComponent {
 
         private Boolean result;
         private String originFileName;
-        private String extension;
         private String savedFileName;
+        private String extension;
+        private Long size;
 
         public FileUpload(MultipartFile multipartFile){
             this.originFileName = multipartFile.getOriginalFilename();
             this.extension = originFileName.substring(originFileName.lastIndexOf("."));
             this.savedFileName = UUID.randomUUID() + extension;
-        }
-
-        public String getSavedFilePath(String filePath){
-            return new StringBuilder()
-                    .append(filePath)
-                    .append(File.separator)
-                    .append(savedFileName)
-                    .toString();
+            this.size = multipartFile.getSize();
         }
 
         public void setResult(Boolean result){

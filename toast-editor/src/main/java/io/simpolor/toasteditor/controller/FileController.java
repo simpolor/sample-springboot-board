@@ -1,7 +1,7 @@
 package io.simpolor.toasteditor.controller;
 
 import com.google.gson.JsonObject;
-import io.simpolor.toasteditor.component.FileUploadComponent;
+import io.simpolor.toasteditor.component.FileComponent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,13 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FileController {
 
-	private final FileUploadComponent fileUploadComponent;
+	private final FileComponent fileComponent;
 
 	@PostMapping(value = "/upload", produces = "application/json")
 	@ResponseBody
 	public JsonObject upload(@RequestParam("image") MultipartFile multipartFile) {
 
-		FileUploadComponent.FileUpload fileMessage = fileUploadComponent.upload(multipartFile);
+		FileComponent.FileUpload fileMessage = fileComponent.upload(multipartFile);
 		if(Boolean.TRUE.equals(fileMessage.getResult())){
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("imageUrl", "/upload/"+fileMessage.getSavedFileName());
