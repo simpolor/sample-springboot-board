@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/default">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+    <link th:rel="stylesheet" th:href="@{/css/pureness-board.css}">
+    <link th:rel="stylesheet" th:href="@{/css/pureness-pagination.css}">
+</th:block>
+
+<div layout:fragment="content" id="content">
+    <div id="main-section">
+
+        <div class="board-title">
+            <h2>게시판</h2>
+        </div><!-- .board-title -->
+
+        <div class="board-list">
+            <table class="pure-table">
+                <colgroup>
+                    <col width="7%"/>
+                    <col width="45%"/>
+                    <col width="13%"/>
+                    <col width="15%"/>
+                    <col width="10%"/>
+                </colgroup>
+
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:if="${boardList.size > 0}" th:each="board : ${boardList}">
+                    <td th:text="${board.id}"></td>
+                    <td class="title"><a th:text="${board.title}" th:href="@{/board/detail/{boardId}(boardId=${board.id})}"></a></td>
+                    <td th:text="${board.creator.nickname}"></td>
+                    <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${board.views}"></td>
+                </tr>
+
+                <tr th:unless="${boardList.size > 0}">
+                    <td colspan="5">결과가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div><!-- .board-list -->
+
+        <div id="pagination" class="pagination" th:with="
+             currentPage = ${param.page != null ? param.page : 1},
+             currentSize = ${param.size != null ? param.size : 10}">
+
+            <ul th:with="
+            totalPage = ${T(java.lang.Math).floorDiv(totalCount, T(java.lang.Integer).toUnsignedLong(currentSize))}">
+                <li>
+                    <span th:text="${currentPage}"></span> / <span th:text="${currentSize}"></span> / <span th:text="${totalPage}"></span>
+                </li>
+
+                <li th:class="${true} ? 'disabled':''">
+                    <a th:href="@{/board/list(page=1)}">처음</a>
+                </li>
+
+                <li th:class="${true} ? 'disabled':''">
+                    <a th:href="${true} ? '#' : @{/board/list(page=1)}">이전</a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(1, 10)}" th:class="${page == currentPage} ? 'active'">
+                    <a th:text="${page}" th:href="@{/board/list(page=${page})}"></a>
+                </li>
+
+                <li th:class="${true} ? 'disabled'">
+                    <a th:href="${true} ? '#' : @{/board/list(page=1)}">다음</a>
+                </li>
+
+                <li th:class="${true} ? 'disabled'">
+                    <a th:href="@{/board/list(page=${1})}">마지막</a>
+                </li>
+            </ul>
+        </div><!-- .pagination -->
+
+    </div><!-- #main-section -->
+</div><!-- #content -->
+
+</html>

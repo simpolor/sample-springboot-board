@@ -1,0 +1,265 @@
+/* ---- .board-title ---- */
+.board-title {
+    margin-bottom: 20px;
+    color: #A4A4A4;
+}
+.board-title h2{
+    font-size: 24px;
+}
+
+/* ---- .board-buttons ---- */
+.board-buttons {
+    margin-top: 10px;
+    text-align: right;
+}
+
+/* ---- .board-list ---- */
+.board-list {
+    width: 100%;
+    border: 0px;
+}
+.board-list th, .board-list td {
+    border: 0px;
+}
+.board-list th {
+    text-align: center;
+}
+.board-list td {
+    border-bottom: 1px solid #CBCBCB;
+    font-weight: lighter;
+    text-align: center;
+}
+.board-list a {
+    text-decoration: none;
+    color: #000000;
+}
+.board-list a:hover {
+    text-decoration: underline;
+}
+.board-list .title {
+    text-align: left;
+}
+
+/* ---- .board-search ---- */
+.board-search {
+    width: 100%;
+    margin: 40px 0;
+    padding: 15px 0;
+    border: 1px solid #cbcbcb;
+}
+.board-search select, .board-search input, .board-search button {
+    height: 37px;
+}
+.board-search select {
+    float: right;
+    width: 90%;
+    margin-right: 5px;
+
+}
+.board-search input {
+    width: 100%;
+}
+.board-search button {
+    float: left;
+    width: 80%;
+    margin-left: 5px;
+}
+
+.board-search .pure-form button[type=submit] {
+    margin: 0 !important;
+}
+
+/* ---- .board-form ---- */
+.board-form {
+    width: 100%;
+}
+.board-form div {
+    margin-bottom: 10px;
+}
+.board-form>.title>input {
+    width: 100%;
+}
+.board-form>.category>select {
+    width: 100px;
+    margin: 0;
+    padding: 0 0 0 5px;
+}
+.board-form>.content>textarea {
+    width: 100%;
+    height: 350px;
+    resize: none;
+}
+.board-form>.upload {
+    width: 100%;
+}
+.board-form>.upload input[type="text"] {
+    display: inline-block;
+    width: 100%;
+    height: 37px;
+    margin: 0;
+
+}
+.board-form>.upload label {
+    display: inline-block;
+    width: 99%;
+    height: 37px;
+    line-height: 37px;
+    margin: 0 0 0 5px;
+    background-color: #E6E6E6;
+    border-radius: 2px;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.board-form>.upload input[type="file"] { /* 파일 필드 숨기기 */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ---- .board-detail ---- */
+.board-detail {
+    width: 100%;
+}
+.board-detail .title, .board-detail .content {
+    pointer-events: none;
+}
+.board-detail .title {
+    margin-bottom: 10px;
+    padding: .5em .6em;
+    font-weight: bold;
+    vertical-align: middle;
+    box-sizing: border-box;
+    border-top: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+}
+.board-detail .title>h3 {
+    font-size: 20px;
+    word-wrap: break-word
+}
+.board-detail .content {
+    width: 100%;
+    min-height: 350px;
+    margin: 0;
+    padding: .5em .6em;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+.board-detail .content>p {
+    word-wrap: break-word
+}
+.board-detail .date {
+    padding-top: 5px;
+    font-weight: lighter;
+    font-size: 10px;
+    color: #7f8c8d;
+}
+
+/* ---- .comment-list ---- */
+.comment {
+    width: 100%;
+    margin: 50px 0;
+}
+.comment-list {
+    width: 100%;
+    list-style: none;
+    padding-left: 0;
+}
+.comment-list li {
+    border-top: 1px solid #CBCBCB;
+}
+.comment-list li:last-child {
+    border-bottom: 1px solid #CBCBCB;
+}
+.comment-list .info {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px dotted #CBCBCB;
+}
+.comment-list .register {
+    font-weight: bold;
+}
+.comment-list .date {
+    padding-top: 5px;
+    font-weight: lighter;
+    font-size: 10px;
+    color: #7f8c8d;
+}
+.comment-list .content {
+    width: 100%;
+    min-height: 70px;
+}
+.comment-list .content>p {
+    margin: 0px;
+    padding: 5px 5px 15px;
+    word-wrap: break-word
+}
+.comment-list .content>textarea {
+    margin: 5px 0;
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+    padding: 10px;
+    resize: none;
+}
+.comment-list .comment-buttons {
+    width: 100%;
+    height: 40px;
+    text-align: right;
+}
+.comment-list .comment-buttons>.pure-button {
+    width: 50px;
+    height: 30px;
+    padding: 0;
+}
+
+/* ---- .comment-form ---- */
+.comment-form {
+    width: 100%;
+    margin-top: 50px;
+}
+.comment-form .info {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #CBCBCB;
+}
+.comment-form .register {
+    font-weight: bold;
+}
+.comment-form .content {
+    width: 100%;
+    margin: 5px 0;
+}
+.comment-form .content>textarea {
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+    padding: 10px;
+    resize: none;
+}
+.comment-form .comment-buttons {
+    width: 100%;
+    height: 40px;
+    text-align: right;
+}
+.comment-form .comment-buttons>.pure-button {
+    width: 50px;
+    height: 30px;
+    padding: 0;
+}
+.comment-form .comment-buttons>span {
+    color: #A4A4A4;
+}
+.comment-form .comment-buttons>span>a {
+    color: #0078E7;
+    text-decoration: none;
+}
