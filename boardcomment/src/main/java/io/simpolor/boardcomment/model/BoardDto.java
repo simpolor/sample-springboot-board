@@ -63,6 +63,35 @@ public class BoardDto {
 
     @Getter
     @Setter
+    public static class BoardDetailResponse {
+
+        private Long id;
+        private String title;
+        private String content;
+        private Long views;
+
+        private UserDto.UserSummary creator;
+        private LocalDateTime createdAt;
+        private UserDto.UserSummary updater;
+        private LocalDateTime updatedAt;
+
+        public static BoardDetailResponse of(Board board){
+            BoardDetailResponse response = new BoardDetailResponse();
+            response.setId(board.getBoardId());
+            response.setTitle(board.getTitle());
+            response.setContent(board.getContent());
+            response.setViews(board.getViews());
+            response.setCreator(UserDto.UserSummary.of(board.getCreator()));
+            response.setCreatedAt(board.getCreatedAt());
+            response.setUpdater(UserDto.UserSummary.of(board.getUpdater()));
+            response.setUpdatedAt(board.getUpdatedAt());
+
+            return response;
+        }
+    }
+
+    @Getter
+    @Setter
     public static class BoardSearch {
         private String title;
 

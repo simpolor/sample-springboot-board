@@ -1,0 +1,41 @@
+.pagination {
+    margin: 30px 0;
+}
+
+.pagination ul {
+    list-style: none;
+    text-align: center;
+}
+
+.pagination li {
+    display: inline;
+    padding: 0 5px;
+}
+
+.pagination a {
+    display: inline-block;
+    margin-right: 3px;
+    padding: 4px 13px;
+    font-size: 16px;
+    font-weight: lighter;
+    line-height: 20px;
+    color: #2E2E2E;
+    text-decoration: none;
+
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.pagination .active>a {
+    color: #1f8dd6;
+    border: 1px solid #CBCBCB;
+}
+
+.pagination .disabled {
+    display: none;
+}

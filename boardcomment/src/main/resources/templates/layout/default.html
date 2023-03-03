@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <head th:replace="fragment/config :: configFragment"></head>
+
+    <body>
+        <div id="wrap">
+            <div id="main">
+
+                <div th:replace="fragment/header :: headerFragment"></div>
+
+                <div th:replace="fragment/nav :: navFragment"></div>
+
+                <div layout:fragment="content"></div>
+
+            </div><!-- #main -->
+        </div><!-- #wrap -->
+
+        <footer th:replace="fragment/footer:: footerFragment"></footer>
+
+        <script>
+            const returnMessage = '[[${returnMessage}]]';
+            $(document).ready(function() {
+                if(returnMessage != ''){
+                    alert(returnMessage);
+                    return false;
+                }
+            });
+        </script>
+    </body>
+
+</html>

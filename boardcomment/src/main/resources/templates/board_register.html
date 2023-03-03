@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/default">
+
+<!-- index.html 고유 CSS 추가 -->
+<th:block layout:fragment="css">
+    <link th:rel="stylesheet" th:href="@{/css/board.css}">
+</th:block>
+
+<!-- index.html 고유 스크립트 추가 -->
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        function fnSubmit() {
+            var form = document.getElementById("boardForm");
+            form.submit();
+        }
+    </script>
+</th:block>
+
+<div layout:fragment="content" id="content">
+    <div id="main-section">
+
+        <div class="board-title">
+            <h2>게시판</h2>
+        </div><!-- .board-title -->
+
+        <form id="boardForm" role="form" th:action="@{/board/register}" th:method="post" th:object="${board}" class="pure-form board-form" >
+            <div class="title">
+                <input type="text" th:name="title" th:id="title" th:errorclass="error-input" placeholder="제목" />
+                <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" th:class="pureness-color-red">제목을 입력해주세요.</span>
+            </div>
+
+            <div class="content">
+                <textarea th:name="content" placeholder="내용"></textarea>
+                <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:class="pureness-color-red">내용을 입력해주세요.</span>
+            </div>
+        </form><!-- .board-form -->
+
+        <div class="board-buttons">
+            <a th:href="@{/admin/board/register}" class="pure-button">초기화</a>
+            <a th:href="@{/admin/board/list}" class="pure-button">목록</a>
+            <button onclick="fnSubmit();" class="pure-button pure-button-primary">등록</button>
+        </div><!-- .board-buttons -->
+
+    </div><!-- #main-section -->
+</div>
+
+</html>
