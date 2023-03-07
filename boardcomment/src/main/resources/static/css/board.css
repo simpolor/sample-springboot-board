@@ -246,6 +246,12 @@
     padding: 10px;
     resize: none;
 }
+.comment-form .content>.error-message {
+    color: #FF0000;
+}
+.comment-form .content>.display-none {
+    display: none;
+}
 .comment-form .comment-buttons {
     width: 100%;
     height: 40px;

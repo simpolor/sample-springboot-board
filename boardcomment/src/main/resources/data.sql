@@ -3,8 +3,8 @@ INSERT INTO user(user_id, nickname, created_at, updated_at, is_deleted)
 INSERT INTO user(user_id, nickname, created_at, updated_at, is_deleted)
     VALUES (2, '관리자1호', now(), now(), 0);
 
-INSERT INTO board(title, content, views, created_at, creator_id, updated_at, updater_id, is_deleted)
-    VALUES ('제목1', '내용1', 0, now(), 1, now(), 1, 0);
+INSERT INTO board(board_id, title, content, views, created_at, creator_id, updated_at, updater_id, is_deleted)
+    VALUES (1, '제목1', '내용1', 0, now(), 1, now(), 1, 0);
 INSERT INTO board(title, content, views, created_at, creator_id, updated_at, updater_id, is_deleted)
     VALUES ('제목2', '내용2', 0, now(), 1, now(), 1, 0);
 INSERT INTO board(title, content, views, created_at, creator_id, updated_at, updater_id, is_deleted)
@@ -47,3 +47,6 @@ INSERT INTO board(title, content, views, created_at, creator_id, updated_at, upd
     VALUES ('제목21', '내용21', 0, now(), 1, now(), 1, 0);
 INSERT INTO board(title, content, views, created_at, creator_id, updated_at, updater_id, is_deleted)
     VALUES ('제목22', '내용22', 0, now(), 2, now(), 2, 0);
+
+INSERT INTO board_comment(board_id, content, created_at, creator_id, updated_at, updater_id, is_deleted)
+    VALUES (1, '코멘트11', now(), 2, now(), 2, 0);

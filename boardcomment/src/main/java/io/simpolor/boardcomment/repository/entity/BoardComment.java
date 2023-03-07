@@ -10,12 +10,16 @@ import java.time.LocalDateTime;
 @Entity
 @Setter
 @Getter
-public class Board {
+public class BoardComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
-    private String title;
+    private Long boardCommentId;
+
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
+
     private String content;
 
     @OneToOne
@@ -23,6 +27,7 @@ public class Board {
     private User creator;
 
     @CreationTimestamp
+    @Column(updatable=false)
     private LocalDateTime createdAt;
 
     @OneToOne
@@ -33,6 +38,4 @@ public class Board {
     private LocalDateTime updatedAt;
 
     private Boolean isDeleted = Boolean.FALSE;
-
-    private Long views = 0L;
 }

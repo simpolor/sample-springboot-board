@@ -13,11 +13,6 @@
             let form = document.getElementById("boardForm");
             form.submit();
         }
-
-        function fnInit() {
-            let content = document.getElementById("content");
-            content.value = '';
-        }
     </script>
 </th:block>
 
@@ -28,22 +23,22 @@
             <h2>게시판</h2>
         </div><!-- .board-title -->
 
-        <form id="boardForm" role="form" th:action="@{/board/register}" th:method="post" th:object="${board}" class="pure-form board-form" >
+        <form id="boardForm" class="pure-form board-form" role="form" th:action="@{/board/modify/{id}(id=${board.id})}" th:method="post" th:object="${board}">
             <div class="title">
-                <input type="text" th:name="title" th:id="title" th:errorclass="error-input" placeholder="제목" />
+                <input type="text" th:name="title" th:id="title" th:value="${board.title}" placeholder="제목" />
                 <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" th:class="pureness-color-red">제목을 입력해주세요.</span>
             </div>
 
             <div class="content">
-                <textarea th:name="content" th:id="content" placeholder="내용"></textarea>
+                <textarea th:name="content" th:id="content"  th:text="${board.content}" placeholder="내용"></textarea>
                 <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:class="pureness-color-red">내용을 입력해주세요.</span>
             </div>
         </form><!-- .board-form -->
 
         <div class="board-buttons">
-            <button onclick="fnInit();" class="pure-button">초기화</button>
             <a th:href="@{/board/list}" class="pure-button">목록</a>
-            <button onclick="fnSubmit();" class="pure-button pure-button-primary">등록</button>
+            <a th:href="@{/board/detail/{id}(id=${board.id})}" class="pure-button">취소</a>
+            <button onclick="fnSubmit();" class="pure-button pure-button-primary">수정</button>
         </div><!-- .board-buttons -->
 
     </div><!-- #main-section -->

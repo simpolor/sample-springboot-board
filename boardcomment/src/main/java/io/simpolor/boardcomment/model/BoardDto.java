@@ -47,8 +47,8 @@ public class BoardDto {
             response.setId(board.getBoardId());
             response.setTitle(board.getTitle());
             response.setContent(board.getContent());
-            response.setCreatedAt(board.getCreatedAt());
             response.setCreator(UserDto.UserSummary.of(board.getCreator()));
+            response.setCreatedAt(board.getCreatedAt());
             response.setViews(board.getViews());
 
             return response;

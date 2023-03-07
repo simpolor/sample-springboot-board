@@ -1,174 +1,213 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/default">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/default">
 
-<!-- index.html 고유 CSS 추가 -->
-<th:block layout:fragment="css">
-    <link th:rel="stylesheet" th:href="@{/css/board.css}">
-</th:block>
+    <head>
+        <!-- index.html 고유 CSS 추가 -->
+        <th:block layout:fragment="css">
+            <link th:rel="stylesheet" th:href="@{/css/board.css}">
+        </th:block>
 
-<!-- index.html 고유 스크립트 추가 -->
-<th:block layout:fragment="script">
-    <script type="text/javascript">
-        function fnDelete() {
-            const form = $('#boardForm');
-            form.submit();
-        }
-
-        function fnCommentInit() {
-            const comment = $('textarea[name=comment]');
-            comment.val('');
-        }
-
-        function fnCommentRegister(){
-            var comment = $('textarea[name=comment]');
-            if(comment.val().length == 0){
-                comment.next('.error-message').css('display', 'block');
-                comment.addClass('error-outline');
-                return false;
-            }else{
-                comment.next('.error-message').css('display', 'none');
-                comment.removeClass('error-outline');
-            }
-
-            $.ajax({
-                url: '/board/comment/register',
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json; charset=UTF-8',
-                data: JSON.stringify({
-                    'boardId': '[[${board.id}]]',
-                    'content': comment.val()
-                }),
-                success: function (response) {
-                    fnCommentElement(response, 'register');
-                    comment.val('');
-                },
-            });
-        }
-
-        function fnCommentModify(boardCommentId){
-            var comment = $('textarea[name=comment'+boardCommentId+']');
-            if(comment.val().length == 0){
-                comment.next('.error-message').css('display', 'block');
-                comment.addClass('error-outline');
-                return false;
-            }else{
-                comment.next('.error-message').css('display', 'none');
-                comment.removeClass('error-outline');
-            }
-
-            $.ajax({
-                url: '/board/comment/modify/'+boardCommentId,
-                type: 'POST',
-                dataType: 'json',
-                contentType: "application/json; charset=UTF-8",
-                data: JSON.stringify({
-                    'boardId': '[[${board.id}]]',
-                    'content': comment.val()
-                }),
-                success: function (response) {
-                    fnCommentElement(response, 'modify');
+        <!-- index.html 고유 스크립트 추가 -->
+        <th:block layout:fragment="script">
+            <script th:src="@{/webjars/jquery/3.6.3/dist/jquery.js}"></script>
+            <script>
+                function fnDelete() {
+                    let form = $('#boardForm');
+                    form.submit();
                 }
-            });
-        }
 
-        function fnCommentModifyForm(boardCommentId){
-            $.ajax({
-                url: '/board/comment/detail/'+boardCommentId,
-                type: 'GET',
-                success: function (response) {
-                    fnCommentElement(response, 'form');
-                },
-            });
-        }
+                function fnCommentInit() {
+                    const comment = $('textarea[name=comment]');
+                    comment.val('');
+                }
 
-        function fnCommentCancel(boardCommentId){
-            $.ajax({
-                url: '/board/comment/detail/'+boardCommentId,
-                type: 'GET',
-                success: function (response) {
-                    fnCommentElement(response, 'cancel');
-                },
-            });
-        }
+                function fnCommentRegister(bordId){
+                    let comment = $('textarea[name=comment]');
+                    if(comment.val().length == 0){
+                        comment.next('.error-message').css('display', 'block');
+                        comment.addClass('error-outline');
+                        return false;
+                    }else{
+                        comment.next('.error-message').css('display', 'none');
+                        comment.removeClass('error-outline');
+                    }
 
-        function fnCommentDelete(boardCommentId){
-            $.ajax({
-                url: '/board/comment/delete/'+boardCommentId,
-                type: 'POST',
-                success: function (response) {
-                    $('#boardComment'+response.boardCommentId).remove();
-                },
-            });
-        }
+                    $.ajax({
+                        url: '/board/'+bordId+'/comment/register',
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=UTF-8',
+                        data: JSON.stringify({
+                            'content': comment.val()
+                        }),
+                        success: function (response) {
+                            fnCommentElement(response, 'register');
+                            comment.val('');
+                        },
+                    });
+                }
 
-        function fnCommentElement(response, type){
-            var html = '<li id="boardComment'+response.boardCommentId+'">';
-            html += '<form id="boardCommentForm'+response.boardCommentId+'">';
-            html += '<div class="info">';
-            html += '   <span class="register">'+response.creator.nickname+'</span>';
-            html += '   <span class="date">'+response.updatedAt+'</span>';
-            html += '</div>';
-            html += '<div class="content">';
-            if(type == 'register' || type == 'modify' || type == 'cancel'){
+                function fnCommentModify(boardId, boardCommentId){
+                    let comment = $('textarea[name=comment'+boardCommentId+']');
+                    if(comment.val().length == 0){
+                        comment.next('.error-message').css('display', 'block');
+                        comment.addClass('error-outline');
+                        return false;
+                    }else{
+                        comment.next('.error-message').css('display', 'none');
+                        comment.removeClass('error-outline');
+                    }
 
-                html += '   <p name="comment'+response.boardCommentId+'">'+response.content.replace(/(?:\r\n|\r|\n)/g, '<br />')+'</p>';
-            }else if(type == 'form'){
-                html += '   <textarea name="comment'+response.boardCommentId+'">'+response.content+'</textarea>';
-                html += '   <span class="error-message display-none">필수 값입니다.</span>';
-            }
-            html += '</div>';
-            html += '</form>';
-            html += '<div class="pureness-comment-buttons">';
+                    $.ajax({
+                        url: '/board/'+boardId+'/comment/modify/'+boardCommentId,
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: "application/json; charset=UTF-8",
+                        data: JSON.stringify({
+                            'content': comment.val()
+                        }),
+                        success: function (response) {
+                            alert(response);
+                            fnCommentElement(response, 'modify');
+                        }
+                    });
+                }
 
-            if(type == 'register' || type == 'modify' || type == 'cancel'){
-                html += '   <button onclick="fnCommentDelete('+response.boardCommentId+')" class="pure-button">삭제</button>';
-                html += '   <button onclick="fnCommentModifyForm('+response.boardCommentId+')" class="pure-button pure-button-primary">수정</button>';
-            }else if(type == 'form'){
-                html += '   <button onclick="fnCommentCancel('+response.boardCommentId+')" class="pure-button">취소</button>';
-                html += '   <button onclick="fnCommentModify('+response.boardCommentId+')" class="pure-button pure-button-primary">완료</button>';
-            }
+                function fnCommentModifyForm(boardId, boardCommentId){
+                    $.ajax({
+                        url: '/board/'+boardId+'/comment/detail/'+boardCommentId,
+                        type: 'GET',
+                        success: function (response) {
+                            fnCommentElement(response, 'form');
+                        },
+                    });
+                }
 
-            html += '</div>';
-            html += '</li>';
+                function fnCommentCancel(boardId, boardCommentId){
+                    $.ajax({
+                        url: '/board/'+boardId+'/comment/detail/'+boardCommentId,
+                        type: 'GET',
+                        success: function (response) {
+                            fnCommentElement(response, 'cancel');
+                        },
+                    });
+                }
 
-            if(type == 'register'){
-                $('.pureness-comment-list').prepend(html);
-            }else if(type == 'modify' || type == 'form' || type == 'cancel'){
-                $('#boardComment'+response.boardCommentId).replaceWith(html);
-            }
-        }
-    </script>
-</th:block>
+                function fnCommentDelete(boardId, boardCommentId){
+                    $.ajax({
+                        url: '/board/'+boardId+'/comment/delete/'+boardCommentId,
+                        type: 'POST',
+                        success: function () {
+                            $('#comment'+boardCommentId).remove();
+                        },
+                    });
+                }
 
-<div layout:fragment="content" id="content">
-    <div id="main-section">
+                function fnCommentElement(response, type){
 
-        <div class="board-title">
-            <h2>게시판</h2>
-        </div><!-- .board-title -->
+                    let html = '<li id="comment'+response.id+'">';
+                    html += '<form id="commentForm'+response.id+'">';
+                    html += '<div class="info">';
+                    html += '   <span class="register">'+response.creator.nickname+'</span>';
+                    html += '   <span class="date">'+response.createdAt+'</span>';
+                    html += '</div>';
+                    html += '<div class="content">';
+                    if(type == 'register' || type == 'modify' || type == 'cancel'){
+                        html += '   <p name="comment'+response.id+'">'+response.content.replace(/(?:\r\n|\r|\n)/g, '<br />')+'</p>';
+                    }else if(type == 'form'){
+                        html += '   <textarea name="comment'+response.id+'">'+response.content+'</textarea>';
+                        html += '   <span class="error-message display-none">필수 값입니다.</span>';
+                    }
+                    html += '</div>';
+                    html += '</form>';
+                    html += '<div class="comment-buttons">';
 
-        <form class="board-detail" id="boardForm" role="form" th:action="@{/admin/board/delete/{id}(id=${board.id})}" th:method="post">
-            <div class="title">
-                <h3 th:text="${board.title}">제목</h3>
-                <div class="date">
-                    생성일: <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
-                    / 수정일: <span th:text="${#temporals.format(board.updatedAt, 'yyyy-MM-dd HH:mm')}"></span>
-                </div>
-            </div>
-            <div class="content">
-                <!--<p th:text="${board.content}"></p>-->
-                <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(board.content),'\n','&lt;br /&gt;'))}"></p>
-            </div>
-        </form><!-- .board-detail -->
+                    if(type == 'register' || type == 'modify' || type == 'cancel'){
+                        html += '   <button onclick="fnCommentDelete([[${board.id}]], '+response.id+')" class="pure-button">삭제</button>';
+                        html += '   <button onclick="fnCommentModifyForm([[${board.id}]], '+response.id+')" class="pure-button pure-button-primary">수정</button>';
+                    }else if(type == 'form'){
+                        html += '   <button onclick="fnCommentCancel([[${board.id}]], '+response.id+')" class="pure-button">취소</button>';
+                        html += '   <button onclick="fnCommentModify([[${board.id}]], '+response.id+')" class="pure-button pure-button-primary">완료</button>';
+                    }
 
-        <div class="board-buttons">
-            <a th:href="@{/admin/board/list}" class="pure-button">목록</a>
-            <a href="#" onclick="fnDelete();" class="pure-button">삭제</a>
-            <a th:href="@{/admin/board/modify/{id}(id=${board.id})}" class="pure-button pure-button-primary">수정</a>
-        </div><!-- .-board-buttons-->
+                    html += '</div>';
+                    html += '</li>';
 
-    </div><!-- #main-section -->
-</div>
+                    if(type == 'register'){
+                        $('.comment-list').prepend(html);
+                    }else if(type == 'modify' || type == 'form' || type == 'cancel'){
+                        $('#comment'+response.id).replaceWith(html);
+                    }
+                }
+            </script>
+        </th:block>
+    </head>
 
+    <body>
+        <div layout:fragment="contents" id="contents">
+            <div id="main-section">
+
+                <div class="board-title">
+                    <h2>게시판</h2>
+                </div><!-- .board-title -->
+
+                <form class="board-detail" id="boardForm" role="form" th:action="@{/board/delete/{id}(id=${board.id})}" th:method="post">
+                    <div class="title">
+                        <h3 th:text="${board.title}">제목</h3>
+                        <div class="date">
+                            생성일: <span th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+                            / 수정일: <span th:text="${#temporals.format(board.updatedAt, 'yyyy-MM-dd HH:mm')}"></span>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <!--<p th:text="${board.content}"></p>-->
+                        <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(board.content),'\n','&lt;br /&gt;'))}"></p>
+                    </div>
+                </form><!-- .board-detail -->
+
+                <div class="board-buttons">
+                    <a th:href="@{/board/list}" class="pure-button">목록</a>
+                    <button onclick="fnDelete();" class="pure-button">삭제</button>
+                    <a th:href="@{/board/modify/{id}(id=${board.id})}" class="pure-button pure-button-primary">수정</a>
+                </div><!-- .-board-buttons-->
+
+                <div class="comment">
+                    <div class="comment-form">
+                        <form id="commentForm" class="pure-form" role="form">
+                            <div class="title">
+                                <h4>댓글 등록</h4>
+                            </div>
+                            <div class="content">
+                                <textarea name="comment" id="comment" placeholder="고운말을 사용합시다."></textarea>
+                                <span class="error-message display-none">필수 값입니다.</span>
+                            </div>
+                        </form><!-- .board-comment-form -->
+                        <div class="comment-buttons">
+                            <button th:onclick="fnCommentInit()" class="pure-button">취소</button>
+                            <button th:onclick="'fnCommentRegister('+${board.id}+')'" class="pure-button pure-button-primary">등록</button>
+                        </div>
+                    </div>
+
+                    <ul class="comment-list">
+                        <li th:if="${boardCommentList.size > 0}" th:id="comment+${boardComment.id}" th:each="boardComment : ${boardCommentList}">
+                            <form th:id="commentForm+${boardComment.id}">
+                                <div class="info">
+                                    <span class="register" th:text="${boardComment.creator.nickname}"></span>
+                                    <span class="date" th:text="${#temporals.format(boardComment.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                </div>
+                                <div class="content">
+                                    <p th:name="comment+${boardComment.id}" th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(boardComment.content),'\n','&lt;br /&gt;'))}"></p>
+                                </div>
+                            </form>
+                            <div class="comment-buttons">
+                                <button th:onclick="'fnCommentDelete('+${boardComment.id}+')'" class="pure-button">삭제</button>
+                                <button th:onclick="'fnCommentModifyForm('+${board.id}+', '+${boardComment.id}+')'" class="pure-button pure-button-primary">수정</button>
+                            </div>
+                        </li>
+                    </ul><!-- .comment-list -->
+                </div><!-- .comment -->
+
+            </div><!-- #main-section -->
+        </div><!-- #contents -->
+    </body>
 </html>

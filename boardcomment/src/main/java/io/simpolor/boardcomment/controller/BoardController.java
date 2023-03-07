@@ -1,8 +1,11 @@
 package io.simpolor.boardcomment.controller;
 
+import io.simpolor.boardcomment.model.BoardCommentDto;
 import io.simpolor.boardcomment.model.BoardDto;
 import io.simpolor.boardcomment.repository.entity.Board;
+import io.simpolor.boardcomment.repository.entity.BoardComment;
 import io.simpolor.boardcomment.repository.entity.User;
+import io.simpolor.boardcomment.service.BoardCommentService;
 import io.simpolor.boardcomment.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,7 @@ import java.util.List;
 public class BoardController {
 
 	private final BoardService boardService;
+	private final BoardCommentService boardCommentService;
 
 	@GetMapping("/list")
 	public ModelAndView list(ModelAndView mav,
@@ -47,7 +51,10 @@ public class BoardController {
 
 		Board board = boardService.get(boardId);
 
+		List<BoardComment> boardComments = boardCommentService.getAll(board);
+
 		mav.addObject("board", BoardDto.BoardDetailResponse.of(board));
+		mav.addObject("boardCommentList", BoardCommentDto.BoardCommentResponse.of(boardComments));
 		mav.setViewName("board_detail");
 		return mav;
 	}
@@ -85,6 +92,51 @@ public class BoardController {
 		boardService.insert(board);
 
 		mav.setViewName("redirect:/board/detail/"+board.getBoardId());
+		return mav;
+	}
+
+	@GetMapping(value="/modify/{boardId}")
+	public ModelAndView modifyForm(ModelAndView mav,
+								   @PathVariable Long boardId,
+								   @ModelAttribute("board") BoardDto.BoardRequest request) {
+
+		Board board = boardService.get(boardId);
+
+		mav.addObject("board", BoardDto.BoardDetailResponse.of(board));
+		mav.setViewName("board_modify");
+		return mav;
+	}
+
+	@PostMapping(value="/modify/{boardId}")
+	public ModelAndView modify(ModelAndView mav,
+							   @PathVariable Long boardId,
+							   @Valid @ModelAttribute("board") BoardDto.BoardRequest request,
+							   BindingResult bindingResult) {
+
+		if(bindingResult.hasErrors()){
+			mav.setViewName("board_modify");
+			return mav;
+		}
+
+		User user = new User();
+		user.setUserId(1L);
+		user.setNickname("유저1호");
+
+		Board board = request.toEntity(boardId);
+		board.setUpdater(user);
+		boardService.update(board);
+
+		mav.setViewName("redirect:/board/detail/"+boardId);
+		return mav;
+	}
+
+	@PostMapping(value="/delete/{boardId}")
+	public ModelAndView delete(ModelAndView mav,
+							   @PathVariable Long boardId) {
+
+		boardService.delete(boardId);
+
+		mav.setViewName("redirect:/board/list");
 		return mav;
 	}
 }

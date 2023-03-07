@@ -27,7 +27,7 @@ public class BoardService {
     }
 
     @Transactional
-    public Board get(long boardId) {
+    public Board get(Long boardId) {
 
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         if(!optionalBoard.isPresent()){
@@ -38,6 +38,15 @@ public class BoardService {
         boardRepository.updateViews(board.getBoardId());
 
         return optionalBoard.get();
+    }
+
+    @Transactional
+    public void verify(Long boardId) {
+
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if(!optionalBoard.isPresent()){
+            throw new EntityNotFoundException("boardId : "+boardId);
+        }
     }
 
     public Board insert(Board board) {
@@ -55,6 +64,7 @@ public class BoardService {
         Board origin = optionalBoard.get();
         origin.setTitle(board.getTitle());
         origin.setContent(board.getContent());
+        origin.setUpdater(board.getUpdater());
 
         boardRepository.save(origin);
     }

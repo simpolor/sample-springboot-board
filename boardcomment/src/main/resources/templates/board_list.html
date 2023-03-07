@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/default">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/default">
 
 <!-- index.html 고유 CSS 추가 -->
 <th:block layout:fragment="css">
@@ -7,7 +7,7 @@
     <link th:rel="stylesheet" th:href="@{/css/pagination.css}">
 </th:block>
 
-<div layout:fragment="content" id="content">
+<div layout:fragment="contents" id="contents">
     <div id="main-section">
 
         <div class="board-title">
@@ -17,11 +17,11 @@
         <div class="board-list">
             <table class="pure-table">
                 <colgroup>
-                    <col width="7%"/>
-                    <col width="45%"/>
-                    <col width="13%"/>
-                    <col width="15%"/>
-                    <col width="10%"/>
+                    <col style="width:7%"/>
+                    <col style="width:45%"/>
+                    <col style="width:13%"/>
+                    <col style="width:15%"/>
+                    <col style="width:10%"/>
                 </colgroup>
 
                 <thead>
@@ -84,6 +84,6 @@
         </div><!-- .board-buttons -->
 
     </div><!-- #main-section -->
-</div><!-- #content -->
+</div><!-- #contents -->
 
 </html>
