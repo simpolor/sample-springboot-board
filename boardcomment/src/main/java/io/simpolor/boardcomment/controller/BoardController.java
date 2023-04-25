@@ -10,6 +10,7 @@ import io.simpolor.boardcomment.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -38,9 +40,14 @@ public class BoardController {
 
 		Page<Board> page = boardService.getAll(search.toEntity(), pageable);
 
+		List<BoardDto.BoardResponse> responses = page.getContent().stream()
+				.map(BoardDto.BoardResponse::of)
+				.collect(Collectors.toList());
+
+		Page<BoardDto.BoardResponse> boards = new PageImpl<>(responses, pageable, page.getTotalElements());
 		mav.addObject("search", search);
-		mav.addObject("totalCount", page.getTotalElements());
-		mav.addObject("boardList", BoardDto.BoardResponse.of(page.getContent()));
+		mav.addObject("boards", boards);
+
 		mav.setViewName("board_list");
 		return mav;
 	}

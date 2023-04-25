@@ -35,48 +35,45 @@
                 </thead>
 
                 <tbody>
-                    <tr th:if="${boardList.size > 0}" th:each="board : ${boardList}">
-                        <td th:text="${board.id}"></td>
-                        <td class="title"><a th:text="${board.title}" th:href="@{/board/detail/{boardId}(boardId=${board.id})}"></a></td>
-                        <td th:text="${board.creator.nickname}"></td>
-                        <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-                        <td th:text="${board.views}"></td>
+                    <tr th:if="${boards.isEmpty}">
+                        <td colspan="5">결과가 없습니다.</td>
                     </tr>
 
-                    <tr th:unless="${boardList.size > 0}">
-                        <td colspan="5">결과가 없습니다.</td>
+                    <tr th:unless="${boards.isEmpty}" th:object="${board}" th th:each="board : ${boards}">
+                        <td th:text="*{id}"></td>
+                        <td class="title"><a th:text="*{title}" th:href="@{/board/detail/{boardId}(boardId=*{id})}"></a></td>
+                        <td th:text="*{creator.nickname}"></td>
+                        <td th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="*{views}"></td>
                     </tr>
                 </tbody>
             </table>
         </div><!-- .board-list -->
 
-        <div id="pagination" class="pagination" th:with="
-             currentPage = ${param.page != null ? param.page : 1},
-             currentSize = ${param.size != null ? param.size : 10}">
-
+        <div id="pagination" class="pagination">
             <ul th:with="
-                totalPage = ${T(java.lang.Math).floorDiv(totalCount, T(java.lang.Integer).toUnsignedLong(currentSize))+1}">
-
-                <li th:class="${true} ? 'disabled':''">
-                    <a th:href="@{/board/list(page=1)}">처음</a>
+                groupSize=5,
+                start=${((boards.number)/groupSize) * groupSize + 1},
+                end=(${(boards.totalPages == 0) ? 1 : (start + (groupSize - 1) < boards.totalPages ? start + (groupSize - 1) : boards.totalPages)})">
+                <li th:if="${start > 1}">
+                    <a th:href="@{/board/list(page=1, size=${boards.size})}" th:text="처음"></a>
+                </li>
+                <li th:if="${start > 1}">
+                    <a th:href="@{/board/list(page=${start - groupSize}, size=${boards.size})}" th:text="'이전'"></a>
                 </li>
 
-                <li th:class="${true} ? 'disabled':''">
-                    <a th:href="${true} ? '#' : @{/board/list(page=1)}">이전</a>
+                <li th:each="page: ${#numbers.sequence(start, end)}">
+                    <a th:text="${page}" th:href="@{/board/list(page=${page}, size=${boards.size})}"></a>
                 </li>
 
-                <li th:each="page: ${#numbers.sequence(1, 10)}" th:class="${page == currentPage} ? 'active'">
-                    <a th:text="${page}" th:href="@{/board/list(page=${page})}"></a>
+                <li th:if="${end < boards.totalPages}">
+                    <a th:href="@{/board/list(page=${start + groupSize}, size=${boards.size})}" th:text="'다음'"></a>
                 </li>
-
-                <li th:class="${true} ? 'disabled'">
-                    <a th:href="${true} ? '#' : @{/board/list(page=1)}">다음</a>
-                </li>
-
-                <li th:class="${true} ? 'disabled'">
-                    <a th:href="@{/board/list(page=${1})}">마지막</a>
+                <li th:if="${end < boards.totalPages}">
+                    <a th:href="@{/board/list(page=${boards.totalPages}, size=${boards.size})}" th:text="마지막"></a>
                 </li>
             </ul>
+
         </div><!-- .pagination -->
 
         <div class="board-buttons">
